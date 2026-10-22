@@ -22,10 +22,15 @@ label{display:block;font-size:13px;color:#57606a}.g{display:grid;grid-template-c
 <div class="card"><h3>Senarai peserta</h3><p style="font-size:13px;color:#57606a">Isi No. KP (12 digit) atau No. Sijil Lahir. Nombor peserta dijana automatik.</p><div id="baris"></div><p id="kira"></p>
 <button id="simpan" onclick="simpan()">Simpan</button> <button class="s" onclick="cetak()">Cetak borang</button><div id="mForm"></div></div></div>
 <div id="vAdmin" hidden><div class="card"><button class="s" onclick="v('vLogin')">← Keluar</button> <b>Dashboard Admin</b><p id="ringkas"></p><p><button class="s" onclick="semua('disahkan',true,'Tandakan DISAHKAN untuk semua sekolah yang sudah mendaftar?')">Sahkan semua</button> <button class="s" onclick="semua('disahkan',false,'Batalkan status DISAHKAN semua sekolah?')">Batal sahkan semua</button> <button class="s" onclick="semua('kunci',true,'KUNCI semua sekolah? Sekolah tidak lagi boleh menyunting.')">Kunci semua</button> <button class="s" onclick="semua('kunci',false,'Buka kunci semua sekolah?')">Buka kunci semua</button></p>
-<div style="overflow-x:auto"><table><tr><th>#</th><th>Kod</th><th>Sekolah</th><th>Singkatan</th><th>L</th><th>P</th><th>Daftar</th><th>Disahkan</th><th>Kunci</th><th></th></tr><tbody id="jadual"></tbody></table></div></div></div>
+<div style="overflow-x:auto"><table><tr><th>#</th><th>Kod</th><th>Sekolah</th><th>Singkatan</th><th>L</th><th>P</th><th>Daftar</th><th>Disahkan</th><th>Kunci</th><th></th></tr><tbody id="jadual"></tbody></table></div></div>
+<div class="card"><b>Pautan &amp; Banner (laman Google Sites)</b> <span style="font-size:13px;color:#57606a">– dipaparkan oleh pautan.html</span>
+<div class="g" style="grid-template-columns:1fr 1fr;margin-top:8px"><label>Tajuk<input id="pt"></label><label>Banner (https:// atau banner.jpg)<input id="pb"></label></div>
+<label>Deskripsi<input id="pd"></label><label>Pengumuman (contoh: tarikh mesyuarat dan larian)<input id="pu"></label><label><input type="checkbox" id="pa"> Papar banner</label>
+<div style="overflow-x:auto"><table><thead><tr><th>Susun</th><th>Aktif</th><th>Kategori</th><th>Tajuk</th><th>URL (https://)</th><th></th></tr></thead><tbody id="pl"></tbody></table></div>
+<p><button class="s" onclick="tPaut()">+ Tambah pautan</button> <button onclick="sPaut()">Simpan pautan</button></p><div id="mPaut"></div></div></div>
 </main><div id="cetak"></div>
 <script>
-const API='https://script.google.com/macros/s/AKfycbziD-XVjuO1EokjyLKQZHhQo5r87iAqcnGR4e0pUkPUqbgcVWBmN-I2Pd47wImWv42Z/exec';
+const API='https://script.google.com/macros/s/AKfycbyfOBLVU1bSqj1ErpaTbdH0V971-_hvl-odQWrAfGJHaeGYzbEudMCTMtEFBAtBAuyY/exec';
 const PF=[['pengurus','Pengurus Pasukan'],['hp_pengurus','No. HP'],['ketua','Ketua Jurulatih'],['hp_ketua','No. HP'],['jurulatih','Jurulatih'],['hp_jurulatih','No. HP'],['juruiring','Juruiring'],['hp_juruiring','No. HP']];
 const $=id=>document.getElementById(id),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let S={},PW='';$('pf').innerHTML=PF.map(([k,l])=>`<label>${l}<input id="p_${k}"></label>`).join('');
@@ -34,7 +39,7 @@ function v(id){['vLogin','vForm','vAdmin'].forEach(x=>$(x).hidden=x!=id)}
 function note(id,h,c){$(id).innerHTML=h;$(id).className=c||''}
 async function masuk(){const k=$('kod').value.trim().toUpperCase();if(!k)return note('mLogin','Sila isi kod sekolah.','err');note('mLogin','Memeriksa…');await buka(k,'','mLogin')}
 async function buka(kod,pw,m){const r=await call({a:'login',kod,pw});if(!r.ok)return note(m||'mLogin',E(r.msg),'err');S=r;paparBorang();v('vForm')}
-async function masukAdmin(){PW=$('pw').value;await adminLoad()}
+async function masukAdmin(){PW=$('pw').value;await adminLoad();muatPautan()}
 async function adminLoad(){const r=await call({a:'adminList',pw:PW});if(!r.ok)return note('mLogin',E(r.msg),'err');paparAdmin(r.list)}
 function balik(){S.admin?adminLoad():v('vLogin')}
 function paparBorang(){const s=S.sekolah,t=S.pasukan||{},ro=S.tutup&&!S.admin;
@@ -66,5 +71,11 @@ $('jadual').innerHTML=l.map((x,i)=>`<tr><td>${i+1}</td><td>${E(x.kod)}</td><td>$
 async function ubahSing(kod,el){const v=el.value.trim().toUpperCase();if(!v||!confirm('Tukar singkatan kepada "'+v+'"? Nombor peserta sekolah ini dikemas kini (semak jika baju sudah dicetak).')){adminLoad();return}
 const r=await call({a:'adminSingkatan',pw:PW,kod,singkatan:v});if(!r.ok)alert(r.msg||'Gagal');adminLoad()}
 async function semua(field,value,t){if(!confirm(t))return;const r=await call({a:'adminFlagSemua',pw:PW,field,value});alert(r.ok?r.n+' sekolah dikemas kini.':(r.msg||'Gagal'));adminLoad()}
+let PT=[];
+async function muatPautan(){const r=await call({a:'pautanAdmin',pw:PW});if(!r.ok)return;const p=r.profil;$('pt').value=p.tajuk;$('pd').value=p.desk;$('pb').value=p.banner;$('pa').checked=p.bannerAktif;$('pu').value=p.umum;PT=r.pautan;rPaut()}
+function rPaut(){$('pl').innerHTML=PT.map((x,i)=>`<tr><td><input type="number" value="${x.susunan}" style="width:60px" onchange="PT[${i}].susunan=+this.value"></td><td><input type="checkbox" ${x.aktif?'checked':''} onchange="PT[${i}].aktif=this.checked"></td><td><input value="${E(x.kategori)}" onchange="PT[${i}].kategori=this.value"></td><td><input value="${E(x.tajuk)}" onchange="PT[${i}].tajuk=this.value"></td><td><input value="${E(x.url)}" onchange="PT[${i}].url=this.value"></td><td><button class="s" onclick="PT.splice(${i},1);rPaut()">Padam</button></td></tr>`).join('')}
+function tPaut(){PT.push({susunan:PT.length+1,aktif:true,kategori:'',tajuk:'',url:''});rPaut()}
+async function sPaut(){note('mPaut','Menyimpan…');const r=await call({a:'pautanSimpan',pw:PW,profil:{tajuk:$('pt').value,desk:$('pd').value,banner:$('pb').value,bannerAktif:$('pa').checked,umum:$('pu').value},pautan:PT});
+if(!r.ok)return note('mPaut',r.errors?r.errors.map(E).join('<br>'):E(r.msg),'err');note('mPaut','Disimpan.','ok');muatPautan()}
 async function flag(kod,field,value){const r=await call({a:'adminFlag',pw:PW,kod,field,value});if(!r.ok)alert(r.msg||'Gagal menyimpan')}
 </script></body></html>
