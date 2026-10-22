@@ -18,7 +18,7 @@ body.tv{background:#0d1117;color:#e6edf3;font-size:max(14px,1.7vh)}body.tv main{
 <div class="card" id="adm" hidden><b>Admin</b> – <a href="#tv=L" target="_blank">TV Lelaki</a> · <a href="#tv=P" target="_blank">TV Perempuan</a> · <button class="s" onclick="lapor(false)">Laporan hadiah</button> <button class="s" onclick="lapor(true)">Rujukan wakil (dalaman)</button></div>
 <div class="card" id="lapW" hidden></div></div></main>
 <script>
-const API='https://script.google.com/macros/s/AKfycbziD-XVjuO1EokjyLKQZHhQo5r87iAqcnGR4e0pUkPUqbgcVWBmN-I2Pd47wImWv42Z/exec',$=id=>document.getElementById(id),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const API='https://script.google.com/macros/s/AKfycbyfOBLVU1bSqj1ErpaTbdH0V971-_hvl-odQWrAfGJHaeGYzbEudMCTMtEFBAtBAuyY/exec',$=id=>document.getElementById(id),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nk=s=>String(s||'').replace(/\s+/g,'').toUpperCase();let D={},PW='',NM='';
 async function call(o){try{return await(await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)})).json()}catch(e){return{ok:false,msg:'Tidak dapat berhubung dengan pelayan.'}}}
 async function masuk(){PW=$('pw').value;NM=$('nm').value.trim()||'pencatat';$('mL').textContent='Memeriksa…';const r=await call({a:'mula',pw:PW});if(!r.ok)return $('mL').textContent=r.msg;
