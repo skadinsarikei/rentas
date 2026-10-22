@@ -14,7 +14,7 @@ body.tv{background:#0d1117;color:#e6edf3;font-size:max(14px,1.7vh)}body.tv main{
 <div id="vLogin" class="card"><h3>Pencatat Markah – Merentas Desa MSSD Sarikei 2026</h3><p><input id="nm" placeholder="Nama pencatat"> <input id="pw" type="password" placeholder="Kata laluan"> <button onclick="masuk()">Masuk</button></p><div id="mL" class="err"></div></div>
 <div id="vC" hidden><div class="card"><b>Kategori:</b> <select id="kat" onchange="baris()"><option value="L">Lelaki 11 TKB</option><option value="P">Perempuan 11 TKB</option></select> &nbsp;<b>Mula kedudukan:</b> <input id="mula" type="number" value="1" min="1" style="width:80px" onchange="baris()">
 <p style="color:#57606a;font-size:13px">Taip No. Peserta (contoh ADIN 33) mengikut borang. Nama dan sekolah dipaparkan untuk disemak.</p><div id="rows"></div><button id="hb" onclick="hantar()">Hantar</button> <span id="mC"></span><p id="jur"></p></div>
-<div class="card"><b>Semakan kedua dan pembetulan</b> <button class="s" onclick="entri()">Muat entri kategori ini</button><div id="ent"></div></div>
+<div class="card"><b>Semakan kedua dan pembetulan</b> <i id="rl" style="font-size:13px;color:#57606a"></i> <button class="s" onclick="entri()">Muat entri kategori ini</button><div id="ent"></div></div>
 <div class="card" id="adm" hidden><b>Admin</b> – <a href="#tv=L" target="_blank">TV Lelaki</a> · <a href="#tv=P" target="_blank">TV Perempuan</a> · <button class="s" onclick="lapor(false)">Laporan hadiah</button> <button class="s" onclick="lapor(true)">Rujukan wakil (dalaman)</button></div>
 <div class="card" id="lapW" hidden></div></div></main>
 <script>
@@ -22,7 +22,7 @@ const API='https://script.google.com/macros/s/AKfycbziD-XVjuO1EokjyLKQZHhQo5r87i
 const nk=s=>String(s||'').replace(/\s+/g,'').toUpperCase();let D={},PW='',NM='';
 async function call(o){try{return await(await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)})).json()}catch(e){return{ok:false,msg:'Tidak dapat berhubung dengan pelayan.'}}}
 async function masuk(){PW=$('pw').value;NM=$('nm').value.trim()||'pencatat';$('mL').textContent='Memeriksa…';const r=await call({a:'mula',pw:PW});if(!r.ok)return $('mL').textContent=r.msg;
-D=r;D.m={};r.peserta.forEach(p=>D.m[nk(p.no)]=p);$('vLogin').hidden=true;$('vC').hidden=false;$('adm').hidden=r.role!='admin';baris()}
+D=r;D.m={};r.peserta.forEach(p=>D.m[nk(p.no)]=p);$('vLogin').hidden=true;$('vC').hidden=false;$('adm').hidden=r.role!='admin';$('rl').textContent='Log masuk sebagai: '+(r.role=='admin'?'Admin – butang Tidak sah/Sah/Batal tersedia selepas Muat entri':'Pencatat – tanpa akses Tidak sah');baris()}
 function baris(){const s=+$('mula').value||1;let h='';for(let i=0;i<10;i++)h+=`<div class="r" data-p="${s+i}"><b>${s+i}</b><input placeholder="No. Peserta" oninput="eko(this)"><span></span></div>`;$('rows').innerHTML=h;$('mC').textContent='';jurang()}
 function eko(el){const p=D.m[nk(el.value)],sp=el.nextElementSibling,k=$('kat').value;
 if(!el.value.trim())sp.textContent='';else if(!p){sp.className='err';sp.textContent='Tidak dijumpai'}else if(p.kat!=k){sp.className='err';sp.textContent='Kategori '+(p.kat=='L'?'lelaki':'perempuan')+': '+p.nama}else{sp.className='ok';sp.textContent=p.nama+' · '+p.sek}}
