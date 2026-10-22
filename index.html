@@ -1,52 +1,67 @@
 <!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Keputusan Merentas Desa MSSD Sarikei 2026</title>
+<title>Pendaftaran Merentas Desa MSSD Sarikei 2026</title>
 <style>
 *{box-sizing:border-box}body{font:15px/1.4 system-ui,sans-serif;margin:0;background:#f6f8fa;color:#1f2328}
-main{max-width:900px;margin:0 auto;padding:12px}.card{background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:14px;margin-bottom:12px}
-input,select,button{font:inherit;padding:7px 9px;border:1px solid #d0d7de;border-radius:6px}button{background:#0b5cab;color:#fff;border:0;cursor:pointer}button.s{background:#57606a}button:disabled{opacity:.5}
-.r{display:grid;grid-template-columns:50px 150px 1fr;gap:8px;align-items:center;margin-bottom:6px}.err{color:#cf222e}.ok{color:#1a7f37}.w{color:#9a6700}
-table{border-collapse:collapse;width:100%}td,th{border:1px solid #d0d7de;padding:4px 7px;font-size:13px;text-align:left}
-body.tv{background:#0d1117;color:#e6edf3;font-size:max(14px,1.7vh)}body.tv main{max-width:none}.tv h1{margin:0 0 4px;font-size:1.5em}
-.tv .l{display:grid;grid-template-columns:3fr 1.2fr;gap:16px}.tv .t{column-count:2;column-gap:20px}.tv .t div{display:grid;grid-template-columns:2.2em 1fr 3em 11em;gap:6px;padding:1px 0;line-height:1.25;border-bottom:1px solid #30363d;break-inside:avoid}
-.tv .t div:nth-child(-n+3){color:#f2cc60;font-weight:700}.tv i{font-style:normal}.tv small{color:#8b949e}.tv .i div{padding:2px 0;border-bottom:1px solid #30363d}
-</style></head><body><main>
-<div id="vTv" hidden><h1 id="tvT"></h1><small id="tvS"></small><div class="l"><div class="t" id="tvB"></div><div class="i"><b>10 TERBAIK (INDIVIDU)</b><div id="tvI"></div></div></div><small id="tvF"></small></div>
-<div id="vLogin" class="card"><h3>Pencatat Markah – Merentas Desa MSSD Sarikei 2026</h3><p><input id="nm" placeholder="Nama pencatat"> <input id="pw" type="password" placeholder="Kata laluan"> <button onclick="masuk()">Masuk</button></p><div id="mL" class="err"></div></div>
-<div id="vC" hidden><div class="card"><b>Kategori:</b> <select id="kat" onchange="baris()"><option value="L">Lelaki 11 TKB</option><option value="P">Perempuan 11 TKB</option></select> &nbsp;<b>Mula kedudukan:</b> <input id="mula" type="number" value="1" min="1" style="width:80px" onchange="baris()">
-<p style="color:#57606a;font-size:13px">Taip No. Peserta (contoh ADIN 33) mengikut borang. Nama dan sekolah dipaparkan untuk disemak.</p><div id="rows"></div><button id="hb" onclick="hantar()">Hantar 10 kedudukan</button> <span id="mC"></span></div>
-<div class="card" id="adm" hidden><b>Admin</b> – <a href="#tv=L" target="_blank">Paparan TV Lelaki</a> · <a href="#tv=P" target="_blank">Paparan TV Perempuan</a>
-<p><button class="s" onclick="entri()">Muat entri kategori ini</button></p><div id="ent"></div></div></div></main>
+header{background:#0b5cab;color:#fff;padding:12px 16px}header h1{margin:0;font-size:17px}
+main{max-width:980px;margin:16px auto;padding:0 12px}.card{background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:14px;margin-bottom:14px}
+input,button{font:inherit;padding:7px 9px;border:1px solid #d0d7de;border-radius:6px;width:100%}input[type=checkbox]{width:auto}
+button{width:auto;background:#0b5cab;color:#fff;border:0;cursor:pointer}button.s{background:#57606a}button:disabled{opacity:.5}
+label{display:block;font-size:13px;color:#57606a}.g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.r{display:grid;grid-template-columns:30px 1.4fr 1.1fr 1.2fr 110px;gap:6px;margin-bottom:6px;align-items:center}.no{font-weight:600;font-size:13px}
+.b{display:inline-block;padding:2px 8px;border-radius:10px;background:#ddf4ff;font-size:12px}.b.x{background:#ffebe9}.b.o{background:#dafbe1}
+.err{color:#cf222e}.warn{color:#9a6700}.ok{color:#1a7f37}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d0d7de;padding:5px 7px;font-size:13px;text-align:left}
+#cetak{display:none}@media(max-width:700px){.g{grid-template-columns:1fr 1fr}.r{grid-template-columns:28px 1fr}.r>*:nth-child(n+3){grid-column:2}}
+@media print{header,main{display:none}#cetak{display:block;font:12px Arial}#cetak table{margin:8px 0}#cetak td,#cetak th{border:1px solid #000;padding:5px}}
+</style></head><body>
+<header><h1>Pendaftaran Kejohanan Merentas Desa Pembangunan (11 TKB) – MSSD Sarikei 2026</h1></header>
+<main>
+<div id="vLogin" class="card"><h3>Log masuk sekolah</h3><label>Kod sekolah (contoh: YBA1234)<input id="kod" autocomplete="off"></label><p><button onclick="masuk()">Masuk</button></p><div id="mLogin"></div>
+<details><summary>Admin</summary><p><label>Kata laluan admin<input id="pw" type="password"></label></p><button class="s" onclick="masukAdmin()">Masuk Admin</button></details></div>
+<div id="vForm" hidden><div class="card"><button class="s" onclick="balik()">← Kembali</button> <b id="tajuk"></b> <span id="status"></span></div>
+<div class="card"><h3>Maklumat pasukan</h3><div class="g" id="pf"></div></div>
+<div class="card"><h3>Senarai peserta</h3><p style="font-size:13px;color:#57606a">Isi No. KP (12 digit) atau No. Sijil Lahir. Nombor peserta dijana automatik.</p><div id="baris"></div><p id="kira"></p>
+<button id="simpan" onclick="simpan()">Simpan</button> <button class="s" onclick="cetak()">Cetak borang</button><div id="mForm"></div></div></div>
+<div id="vAdmin" hidden><div class="card"><button class="s" onclick="v('vLogin')">← Keluar</button> <b>Dashboard Admin</b><p id="ringkas"></p>
+<div style="overflow-x:auto"><table><tr><th>#</th><th>Kod</th><th>Sekolah</th><th>Singkatan</th><th>L</th><th>P</th><th>Daftar</th><th>Disahkan</th><th>Kunci</th><th></th></tr><tbody id="jadual"></tbody></table></div></div></div>
+</main><div id="cetak"></div>
 <script>
-const API='https://script.google.com/macros/s/AKfycbziD-XVjuO1EokjyLKQZHhQo5r87iAqcnGR4e0pUkPUqbgcVWBmN-I2Pd47wImWv42Z/exec',$=id=>document.getElementById(id),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const nk=s=>String(s||'').replace(/\s+/g,'').toUpperCase();let D={},PW='',NM='';
-async function call(o){try{return await(await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)})).json()}catch(e){return{ok:false,msg:'Tidak dapat berhubung dengan pelayan.'}}}
-async function masuk(){PW=$('pw').value;NM=$('nm').value.trim()||'pencatat';$('mL').textContent='Memeriksa…';const r=await call({a:'mula',pw:PW});if(!r.ok)return $('mL').textContent=r.msg;
-D=r;D.m={};r.peserta.forEach(p=>D.m[nk(p.no)]=p);$('vLogin').hidden=true;$('vC').hidden=false;$('adm').hidden=r.role!='admin';baris()}
-function baris(){const s=+$('mula').value||1;let h='';for(let i=0;i<10;i++)h+=`<div class="r" data-p="${s+i}"><b>${s+i}</b><input placeholder="No. Peserta" oninput="eko(this)"><span></span></div>`;$('rows').innerHTML=h;$('mC').textContent=''}
-function eko(el){const p=D.m[nk(el.value)],sp=el.nextElementSibling,k=$('kat').value;
-if(!el.value.trim())sp.textContent='';else if(!p){sp.className='err';sp.textContent='Tidak dijumpai'}else if(p.kat!=k){sp.className='err';sp.textContent='Kategori '+(p.kat=='L'?'lelaki':'perempuan')+': '+p.nama}else{sp.className='ok';sp.textContent=p.nama+' · '+p.sek}}
-async function hantar(){const items=[...document.querySelectorAll('#rows .r')].map(r=>({pos:r.dataset.p,no:r.children[1].value})).filter(x=>x.no.trim());if(!items.length)return;
-$('hb').disabled=true;$('mC').textContent='Menyimpan…';const r=await call({a:'catat',pw:PW,nama:NM,kat:$('kat').value,items});$('hb').disabled=false;
-if(!r.ok){$('mC').className='err';return $('mC').textContent=r.msg}
-const bad={};r.ralat.forEach(e=>bad[e.pos]=e.msg);
-document.querySelectorAll('#rows .r').forEach(row=>{const p=row.dataset.p;if(bad[p]){row.children[2].className='err';row.children[2].textContent=bad[p]}else if(r.disimpan.includes(+p)){row.children[1].value='';row.children[1].disabled=true;row.children[2].className='ok';row.children[2].textContent+=' ✔'}});
-$('mC').className=r.ralat.length?'w':'ok';$('mC').textContent=r.disimpan.length+' disimpan'+(r.ralat.length?', '+r.ralat.length+' perlu dibetulkan (kecuali kedudukan itu, baris lain sudah disimpan).':'. Taip kelompok seterusnya.');
-if(!r.ralat.length){$('mula').value=(+$('mula').value)+10;setTimeout(baris,600)}}
-async function entri(){const k=$('kat').value,r=await call({a:'entri',pw:PW,kat:k});if(!r.ok)return $('ent').textContent=r.msg;
-$('ent').innerHTML='<table><tr><th>Kad</th><th>No. Peserta</th><th>Nama</th><th>Status</th><th></th></tr>'+r.list.map(x=>`<tr><td>${x.pos}</td><td>${E(x.no)}</td><td>${E((D.m[nk(x.no)]||{}).nama)}</td><td>${E(x.status)} ${E(x.sebab)}</td><td><button class="s" onclick="tanda(${x.pos},'TIDAK SAH')">Tidak sah</button> <button class="s" onclick="tanda(${x.pos},'SAH')">Sah</button> <button class="s" onclick="tanda(${x.pos},'BATAL')">Batal</button></td></tr>`).join('')+'</table>'}
-async function tanda(pos,status){const sebab=status=='SAH'?'':prompt('Sebab:')||'';const r=await call({a:'tanda',pw:PW,kat:$('kat').value,pos,status,sebab});if(!r.ok)alert(r.msg);else entri()}
-// ===== Paparan TV: buka dengan #tv=L atau #tv=P =====
-const tv=(location.hash.match(/tv=([LP])/)||[])[1];
-if(tv){document.body.className='tv';$('vLogin').hidden=true;$('vTv').hidden=false;
-const muat=async()=>{const r=await call({a:'papan',kat:tv});if(!r.ok)return;
-$('tvT').textContent='KEDUDUKAN PASUKAN – '+(tv=='L'?'LELAKI':'PEREMPUAN')+' 11 TKB';
-$('tvS').textContent='Kedudukan direkod: '+r.rekod+'/'+r.had+' · 4 kedudukan terbaik dikira · Dikemas kini '+new Date().toLocaleTimeString('ms-MY');
-const rw=Math.ceil(r.layak.length/2)||1;document.body.style.fontSize=Math.max(1.2,Math.min(2.4,76/(rw*1.3)))+'vh';let ps=false;
-$('tvB').innerHTML=r.layak.map(t=>{const pt=r.layak.some(x=>x!==t&&x.ag===t.ag&&x.k!==t.k);ps=ps||pt;
-const s=t.v.slice().sort((a,b)=>a-b).map((x,i)=>`<i style="${i>3?'opacity:.4':'color:#fff'}">${x>=r.pen?'–':x}</i>`).join(' ');
-return `<div><b>${t.k}${t.seri?'=':''}</b><span>${E(t.sek)}</span><b>${t.ag}${pt?'*':''}</b><span>${s}</span></div>`}).join('');
-window.ps=ps;
-$('tvI').innerHTML=r.ind.map(i=>`<div>${i.k}. ${E(i.nama)}<br><small>${E(i.sek)}</small></div>`).join('');
-$('tvF').textContent=(window.ps?'* Agregat sama, diputuskan oleh penentu seri. ':'')+(r.tidak.length?'Tidak dikira berpasukan (kurang 4 peserta): '+r.tidak.join(', '):'')};
-muat();setInterval(muat,6000)}
+const API='https://script.google.com/macros/s/AKfycbziD-XVjuO1EokjyLKQZHhQo5r87iAqcnGR4e0pUkPUqbgcVWBmN-I2Pd47wImWv42Z/exec';
+const PF=[['pengurus','Pengurus Pasukan'],['hp_pengurus','No. HP'],['ketua','Ketua Jurulatih'],['hp_ketua','No. HP'],['jurulatih','Jurulatih'],['hp_jurulatih','No. HP'],['juruiring','Juruiring'],['hp_juruiring','No. HP']];
+const $=id=>document.getElementById(id),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={},PW='';$('pf').innerHTML=PF.map(([k,l])=>`<label>${l}<input id="p_${k}"></label>`).join('');
+async function call(o){try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)});return await r.json()}catch(e){return{ok:false,msg:'Tidak dapat berhubung dengan pelayan.'}}}
+function v(id){['vLogin','vForm','vAdmin'].forEach(x=>$(x).hidden=x!=id)}
+function note(id,h,c){$(id).innerHTML=h;$(id).className=c||''}
+async function masuk(){const k=$('kod').value.trim().toUpperCase();if(!k)return note('mLogin','Sila isi kod sekolah.','err');note('mLogin','Memeriksa…');await buka(k,'','mLogin')}
+async function buka(kod,pw,m){const r=await call({a:'login',kod,pw});if(!r.ok)return note(m||'mLogin',E(r.msg),'err');S=r;paparBorang();v('vForm')}
+async function masukAdmin(){PW=$('pw').value;await adminLoad()}
+async function adminLoad(){const r=await call({a:'adminList',pw:PW});if(!r.ok)return note('mLogin',E(r.msg),'err');paparAdmin(r.list)}
+function balik(){S.admin?adminLoad():v('vLogin')}
+function paparBorang(){const s=S.sekolah,t=S.pasukan||{},ro=S.tutup&&!S.admin;
+$('tajuk').textContent=s.nama+' ('+s.kod+')';
+$('status').innerHTML=(S.admin?'<span class="b">Mod admin</span> ':'')+(S.tutup?`<span class="b x">${ro?'Pendaftaran ditutup – baca sahaja':'Ditutup (admin boleh sunting)'}</span>`:'<span class="b o">Pendaftaran dibuka</span>');
+PF.forEach(([k])=>$('p_'+k).value=t[k]||'');let h='';
+[['L','LELAKI 11 TKB',33],['P','PEREMPUAN 11 TKB',41]].forEach(([k,l,n])=>{h+=`<h4>${l}</h4>`;for(let i=1;i<=5;i++)h+=`<div class="r" data-k="${k}" data-i="${i}"><b>${(k=='L'?0:5)+i}</b><input placeholder="Nama peserta"><input placeholder="No. KP / Sijil Lahir"><input placeholder="Catatan"><span class="no">${E(s.singkatan)} ${n+i-1}</span></div>`});
+$('baris').innerHTML=h;
+S.peserta.forEach(p=>{const r=document.querySelector(`.r[data-k="${p.kategori}"][data-i="${p.slot}"]`);if(r){r.children[1].value=p.nama;r.children[2].value=p.dokumen;r.children[3].value=p.catatan||''}});
+document.querySelectorAll('#vForm input').forEach(e=>e.disabled=ro);$('simpan').disabled=ro;kira();$('mForm').innerHTML=''}
+function kira(){const c={L:0,P:0};document.querySelectorAll('.r[data-k]').forEach(r=>{if(r.children[1].value.trim())c[r.dataset.k]++});
+const w=k=>c[k]>0&&c[k]<4?' <span class="warn">(kurang 4: tidak dikira berpasukan)</span>':'';
+$('kira').innerHTML=`Lelaki: <b>${c.L}</b>${w('L')} · Perempuan: <b>${c.P}</b>${w('P')} · Jumlah: <b>${c.L+c.P}</b>`}
+document.addEventListener('input',kira);
+const rowsData=()=>[...document.querySelectorAll('.r[data-k]')].map(r=>({kategori:r.dataset.k,slot:+r.dataset.i,nama:r.children[1].value,dokumen:r.children[2].value,catatan:r.children[3].value}));
+const team=()=>{const o={};PF.forEach(([k])=>o[k]=$('p_'+k).value);return o};
+async function simpan(){const b=$('simpan');b.disabled=true;note('mForm','Menyimpan…');
+const r=await call({a:'save',kod:S.sekolah.kod,pw:S.admin?PW:'',pasukan:team(),peserta:rowsData()});b.disabled=false;
+if(!r.ok)return note('mForm',r.errors?'<b>Sila betulkan:</b><ul>'+r.errors.map(e=>`<li>${E(e)}</li>`).join('')+'</ul>':E(r.msg),'err');
+note('mForm',`<b>Berjaya disimpan (${r.jumlah} peserta).</b>`+(r.warnings.length?'<ul class="warn">'+r.warnings.map(e=>`<li>${E(e)}</li>`).join('')+'</ul>':''),'ok')}
+function cetak(){const s=S.sekolah,t=team(),R=rowsData(),n=k=>R.filter(x=>x.kategori==k&&x.nama.trim()).length;
+const tr=x=>`<tr><td>${(x.kategori=='L'?0:5)+x.slot}</td><td>${E(x.nama.toUpperCase())}</td><td>${E(x.dokumen)}</td><td>${E(s.singkatan)} ${(x.kategori=='L'?33:41)+x.slot-1}</td><td>${E(x.catatan)}</td></tr>`;
+const sec=(k,l)=>`<tr><th colspan="5">${l}</th></tr>`+R.filter(x=>x.kategori==k).map(tr).join('');
+const j=(l,a,b)=>`<tr><td>${l}</td><td>${E(a)}</td><td>No. HP:</td><td>${E(b)}</td></tr>`;
+$('cetak').innerHTML=`<div style="text-align:center"><b>BORANG PENYERTAAN SEKOLAH RENDAH<br>KEJOHANAN MERENTAS DESA PEMBANGUNAN<br>MAJLIS SUKAN SEKOLAH DAERAH SARIKEI<br>2026</b></div><table><tr><td>NAMA SEKOLAH</td><td colspan="3">${E(s.nama)} (${E(s.kod)})</td></tr>${j('PENGURUS PASUKAN',t.pengurus,t.hp_pengurus)}${j('KETUA JURULATIH',t.ketua,t.hp_ketua)}${j('JURULATIH',t.jurulatih,t.hp_jurulatih)}${j('JURUIRING',t.juruiring,t.hp_juruiring)}<tr><td>BILANGAN ATLET</td><td>Lelaki: ${n('L')}</td><td>Perempuan: ${n('P')}</td><td>Jumlah: ${n('L')+n('P')}</td></tr></table><table><tr><th>BIL.</th><th>NAMA PESERTA</th><th>NO. KAD PENGENALAN / SIJIL LAHIR</th><th>NO. PESERTA</th><th>CATATAN</th></tr>${sec('L','LELAKI 11TKB')}${sec('P','PEREMPUAN 11TKB')}</table><p>Disahkan oleh:<br><br>………………………………… <span style="float:right">Cop sekolah:</span></p>`;window.print()}
+function paparAdmin(l){v('vAdmin');const sum=k=>l.reduce((a,x)=>a+x[k],0);
+$('ringkas').innerHTML=`Sekolah mendaftar: <b>${l.filter(x=>x.L+x.P>0).length}/${l.length}</b> · Lelaki: <b>${sum('L')}</b> · Perempuan: <b>${sum('P')}</b>`;
+$('jadual').innerHTML=l.map((x,i)=>`<tr><td>${i+1}</td><td>${E(x.kod)}</td><td>${E(x.nama)}${x.dup?' <span class="b x">singkatan sama</span>':''}</td><td>${E(x.singkatan)}</td><td>${x.L}</td><td>${x.P}</td><td>${x.L+x.P?'✔':'—'}</td><td><input type="checkbox" ${x.disahkan?'checked':''} onchange="flag('${x.kod}','disahkan',this.checked)"></td><td><input type="checkbox" ${x.kunci?'checked':''} onchange="flag('${x.kod}','kunci',this.checked)"></td><td><button class="s" onclick="buka('${x.kod}',PW)">Buka</button></td></tr>`).join('')}
+async function flag(kod,field,value){const r=await call({a:'adminFlag',pw:PW,kod,field,value});if(!r.ok)alert(r.msg||'Gagal menyimpan')}
 </script></body></html>
