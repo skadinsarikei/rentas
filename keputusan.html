@@ -13,7 +13,7 @@ body.tv{background:#0d1117;color:#e6edf3;font-size:max(14px,1.7vh)}body.tv main{
 <div id="vTv" hidden><h1 id="tvT"></h1><small id="tvS"></small><div class="l"><div class="t" id="tvB"></div><div class="i"><b id="tvH">10 TERBAIK (INDIVIDU)</b><div id="tvI"></div></div></div><small id="tvF"></small></div>
 <div id="vLogin" class="card"><h3>Pencatat Markah – Merentas Desa MSSD Sarikei 2026</h3><p><input id="nm" placeholder="Nama pencatat"> <input id="pw" type="password" placeholder="Kata laluan"> <button onclick="masuk()">Masuk</button></p><div id="mL" class="err"></div></div>
 <div id="vC" hidden><div class="card"><b>Kategori:</b> <select id="kat" onchange="baris()"><option value="L">Lelaki 11 TKB</option><option value="P">Perempuan 11 TKB</option></select> &nbsp;<b>Mula kedudukan:</b> <input id="mula" type="number" value="1" min="1" style="width:80px" onchange="baris()">
-<p style="color:#57606a;font-size:13px">Taip No. Peserta (contoh ADIN 33) mengikut borang. Nama dan sekolah dipaparkan untuk disemak.</p><div id="rows"></div><button id="hb" onclick="hantar()">Hantar 10 kedudukan</button> <span id="mC"></span><p id="jur"></p></div>
+<p style="color:#57606a;font-size:13px">Taip No. Peserta (contoh ADIN 33) mengikut borang. Nama dan sekolah dipaparkan untuk disemak.</p><div id="rows"></div><button id="hb" onclick="hantar()">Hantar</button> <span id="mC"></span><p id="jur"></p></div>
 <div class="card"><b>Semakan kedua dan pembetulan</b> <button class="s" onclick="entri()">Muat entri kategori ini</button><div id="ent"></div></div>
 <div class="card" id="adm" hidden><b>Admin</b> – <a href="#tv=L" target="_blank">TV Lelaki</a> · <a href="#tv=P" target="_blank">TV Perempuan</a> · <button class="s" onclick="lapor(false)">Laporan hadiah</button> <button class="s" onclick="lapor(true)">Rujukan wakil (dalaman)</button></div>
 <div class="card" id="lapW" hidden></div></div></main>
@@ -31,8 +31,8 @@ $('hb').disabled=true;$('mC').textContent='Menyimpan…';const r=await call({a:'
 if(!r.ok){$('mC').className='err';return $('mC').textContent=r.msg}
 const bad={};r.ralat.forEach(e=>bad[e.pos]=e.msg);
 document.querySelectorAll('#rows .r').forEach(row=>{const p=row.dataset.p;if(bad[p]){row.children[2].className='err';row.children[2].textContent=bad[p]}else if(r.disimpan.includes(+p)){row.children[1].value='';row.children[1].disabled=true;row.children[2].className='ok';row.children[2].textContent+=' ✔'}});
-jurang();$('mC').className=r.ralat.length?'w':'ok';$('mC').textContent=r.disimpan.length+' disimpan'+(r.ralat.length?', '+r.ralat.length+' perlu dibetulkan (kecuali kedudukan itu, baris lain sudah disimpan).':'. Taip kelompok seterusnya.');
-if(!r.ralat.length){$('mula').value=(+$('mula').value)+10;setTimeout(baris,600)}}
+jurang();$('mC').className=r.ralat.length?'w':'ok';$('mC').textContent=r.disimpan.length+' disimpan'+(r.ralat.length?', '+r.ralat.length+' perlu dibetulkan (kecuali kedudukan itu, baris lain sudah disimpan).':(items.length==10?'. Taip kelompok seterusnya.':'. Baris kosong boleh diisi kemudian dan dihantar semula.'));
+if(!r.ralat.length&&items.length==10){$('mula').value=(+$('mula').value)+10;setTimeout(baris,600)}}
 const rg=a=>{const o=[];for(let i=0;i<a.length;i++){let j=i;while(a[j+1]===a[j]+1)j++;o.push(j>i?a[i]+'–'+a[j]:a[i]);i=j}return o.join(', ')};
 async function jurang(){const r=await call({a:'papan',kat:$('kat').value});if(!r.ok)return;const s=new Set(r.hilang);let mx=0;for(let i=1;i<=r.had;i++)if(!s.has(i))mx=i;const g=r.hilang.filter(p=>p<mx);
 $('jur').className=g.length?'w':'ok';$('jur').textContent=g.length?'Jurang (belum dimasukkan, di bawah kedudukan '+mx+'): '+rg(g):(mx?'Tiada jurang hingga kedudukan '+mx+'.':'Belum ada kedudukan direkod.')}
