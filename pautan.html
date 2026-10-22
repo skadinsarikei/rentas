@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Merentas Desa MSSD Sarikei 2026</title>
+<style>
+:root{--bg:#f6f8fa;--c:#fff;--t:#1f2328;--m:#57606a;--b:#d0d7de;--p:#0b5cab}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1117;--c:#161b22;--t:#e6edf3;--m:#8b949e;--b:#30363d;--p:#4493f8}}
+*{box-sizing:border-box}body{margin:0;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--t)}main{max-width:640px;margin:0 auto;padding:12px}
+img{max-width:100%;height:auto;border-radius:10px;display:block;margin-bottom:12px}h1{font-size:1.3em;margin:4px 0}p{color:var(--m);margin:4px 0 12px}
+.u{background:var(--c);border:1px solid var(--b);border-left:4px solid var(--p);border-radius:8px;padding:10px 12px;margin-bottom:14px;white-space:pre-line}
+h2{font-size:.85em;text-transform:uppercase;color:var(--m);margin:16px 0 6px}
+a.l{display:block;background:var(--c);border:1px solid var(--b);border-radius:10px;padding:12px 14px;margin-bottom:8px;color:var(--p);font-weight:600;text-decoration:none;text-align:center}a.l:hover{border-color:var(--p)}
+</style></head><body><main id="m">Memuatkan…</main>
+<script>
+const API='https://script.google.com/macros/s/AKfycbyfOBLVU1bSqj1ErpaTbdH0V971-_hvl-odQWrAfGJHaeGYzbEudMCTMtEFBAtBAuyY/exec';
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x)e.textContent=x;return e};
+fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({a:'pautanBaca'})}).then(r=>r.json()).then(r=>{
+const m=document.getElementById('m');if(!r.ok)throw 0;m.textContent='';const p=r.profil;
+if(p.bannerAktif&&p.banner){const i=new Image();i.alt='Banner';i.src=p.banner;i.onerror=()=>i.remove();m.append(i)}
+m.append(el('h1','',p.tajuk));if(p.desk)m.append(el('p','',p.desk));if(p.umum)m.append(el('div','u',p.umum));
+let kat=null;r.pautan.forEach(x=>{if(!String(x.url).startsWith('https://'))return;if(x.kat&&x.kat!==kat){m.append(el('h2','',x.kat));kat=x.kat}
+const a=el('a','l',x.tajuk);a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';m.append(a)})
+}).catch(()=>document.getElementById('m').textContent='Tidak dapat memuatkan pautan.');
+</script></body></html>
