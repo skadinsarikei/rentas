@@ -7,8 +7,8 @@ input,select,button{font:inherit;padding:7px 9px;border:1px solid #d0d7de;border
 .r{display:grid;grid-template-columns:50px 150px 1fr;gap:8px;align-items:center;margin-bottom:6px}.err{color:#cf222e}.ok{color:#1a7f37}.w{color:#9a6700}
 table{border-collapse:collapse;width:100%}td,th{border:1px solid #d0d7de;padding:4px 7px;font-size:13px;text-align:left}
 body.tv{background:#0d1117;color:#e6edf3;font-size:max(14px,1.7vh)}body.tv main{max-width:none}.tv h1{margin:0 0 4px;font-size:1.5em}
-.tv .l{display:grid;grid-template-columns:3fr 1.2fr;gap:16px}.tv .t{column-count:2;column-gap:20px}.tv .t div{display:grid;grid-template-columns:2.2em 1fr 3em 7em;gap:6px;padding:2px 0;border-bottom:1px solid #30363d;break-inside:avoid}
-.tv .t div:nth-child(-n+3){color:#f2cc60;font-weight:700}.tv small{color:#8b949e}.tv .i div{padding:2px 0;border-bottom:1px solid #30363d}
+.tv .l{display:grid;grid-template-columns:3fr 1.2fr;gap:16px}.tv .t{column-count:2;column-gap:20px}.tv .t div{display:grid;grid-template-columns:2.2em 1fr 3em 11em;gap:6px;padding:1px 0;line-height:1.25;border-bottom:1px solid #30363d;break-inside:avoid}
+.tv .t div:nth-child(-n+3){color:#f2cc60;font-weight:700}.tv i{font-style:normal}.tv small{color:#8b949e}.tv .i div{padding:2px 0;border-bottom:1px solid #30363d}
 </style></head><body><main>
 <div id="vTv" hidden><h1 id="tvT"></h1><small id="tvS"></small><div class="l"><div class="t" id="tvB"></div><div class="i"><b>10 TERBAIK (INDIVIDU)</b><div id="tvI"></div></div></div><small id="tvF"></small></div>
 <div id="vLogin" class="card"><h3>Pencatat Markah – Merentas Desa MSSD Sarikei 2026</h3><p><input id="nm" placeholder="Nama pencatat"> <input id="pw" type="password" placeholder="Kata laluan"> <button onclick="masuk()">Masuk</button></p><div id="mL" class="err"></div></div>
@@ -40,9 +40,13 @@ const tv=(location.hash.match(/tv=([LP])/)||[])[1];
 if(tv){document.body.className='tv';$('vLogin').hidden=true;$('vTv').hidden=false;
 const muat=async()=>{const r=await call({a:'papan',kat:tv});if(!r.ok)return;
 $('tvT').textContent='KEDUDUKAN PASUKAN – '+(tv=='L'?'LELAKI':'PEREMPUAN')+' 11 TKB';
-$('tvS').textContent='Kedudukan direkod: '+r.rekod+'/'+r.had+' · Dikemas kini '+new Date().toLocaleTimeString('ms-MY');
-$('tvB').innerHTML=r.layak.map(t=>`<div><b>${t.k}${t.seri?'=':''}</b><span>${E(t.sek)}</span><b>${t.ag}</b><small>${t.v.map(x=>x>=r.pen?'–':x).join(' ')}</small></div>`).join('');
+$('tvS').textContent='Kedudukan direkod: '+r.rekod+'/'+r.had+' · 4 kedudukan terbaik dikira · Dikemas kini '+new Date().toLocaleTimeString('ms-MY');
+const rw=Math.ceil(r.layak.length/2)||1;document.body.style.fontSize=Math.max(1.2,Math.min(2.4,76/(rw*1.3)))+'vh';let ps=false;
+$('tvB').innerHTML=r.layak.map(t=>{const pt=r.layak.some(x=>x!==t&&x.ag===t.ag&&x.k!==t.k);ps=ps||pt;
+const s=t.v.slice().sort((a,b)=>a-b).map((x,i)=>`<i style="${i>3?'opacity:.4':'color:#fff'}">${x>=r.pen?'–':x}</i>`).join(' ');
+return `<div><b>${t.k}${t.seri?'=':''}</b><span>${E(t.sek)}</span><b>${t.ag}${pt?'*':''}</b><span>${s}</span></div>`}).join('');
+window.ps=ps;
 $('tvI').innerHTML=r.ind.map(i=>`<div>${i.k}. ${E(i.nama)}<br><small>${E(i.sek)}</small></div>`).join('');
-$('tvF').textContent=r.tidak.length?'Tidak dikira berpasukan (kurang 4 peserta): '+r.tidak.join(', '):''};
+$('tvF').textContent=(window.ps?'* Agregat sama, diputuskan oleh penentu seri. ':'')+(r.tidak.length?'Tidak dikira berpasukan (kurang 4 peserta): '+r.tidak.join(', '):'')};
 muat();setInterval(muat,6000)}
 </script></body></html>
