@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merentas Desa Pembangunan 11TKB – Daerah Sarikei 2026</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  TETAPAN — UBAH DUA BARIS INI SAHAJA SELEPAS SETUP GOOGLE APPS SCRIPT
+// ════════════════════════════════════════════════════════════════
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhn8tadk5FZtchMc20IxRsxCouAgzU8HlcTzOpDqVB6CCMEqgaOxts9vPAwaoitU_7/exec';
+const DRIVE_FOLDER_ID   = '1ENHzideFNNJs9m23Go4Y_oTRZLO7-3BU';
+// Satu Apps Script gabungan: Pendaftaran, Keputusan, Urus Setia & Dokumentasi guna URL yang sama
+const API_MD = GOOGLE_SCRIPT_URL;
+// Alamat awam halaman ini (contoh: GitHub Pages) — digunakan oleh ikon "tab baharu" pada papan Keputusan.
+// WAJIB diisi jika halaman ditampal terus ke Google Sites (alamat dalaman Google tidak boleh dibuka dalam tab baharu).
+const URL_LAMAN = https://skadinsarikei.github.io/rentas/index.html';  // cth: https://namaanda.github.io/merentas-desa/
+// ════════════════════════════════════════════════════════════════
+
+const LOGO_SEKOLAH = 'https://i.postimg.cc/qBcGF2Ww/Logo-SK-Adin.png';
+const LOGO_SAFE     = '';
+const NAMA_SEKOLAH = 'SEKOLAH KEBANGSAAN ADIN, SARIKEI';
+const DAERAH       = 'SARIKEI, SARAWAK';
+const MAKS_GAMBAR  = 8; // had maksimum gambar setiap laporan
+</script>
+
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sb: 250px;
+  --blue-700: #1d4ed8; --blue-600: #2563eb; --blue-100: #dbeafe; --blue-50: #eff6ff;
+  --green-700: #047857; --green-600: #059669; --green-50: #ecfdf5;
+  --amber-600: #d97706; --amber-50: #fffbeb;
+  --red-600: #dc2626;   --red-50: #fee2e2;
+  --purple-600: #7c3aed; --purple-50: #f5f3ff; --purple-100: #ede9fe;
+  --pink-600: #db2777; --pink-50: #fdf2f8;
+  --indigo-600: #4f46e5;
+  --s900: #0f172a; --s800: #1e293b; --s700: #334155; --s600: #475569;
+  --s500: #64748b; --s400: #94a3b8; --s300: #cbd5e1; --s200: #e2e8f0;
+  --s100: #f1f5f9; --s50: #f8fafc; --w: #ffffff;
+  --r: 8px; --rl: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadowL: 0 8px 24px rgba(0,0,0,.10);
+  --tr: 150ms cubic-bezier(.4,0,.2,1);
+  --ring: 0 0 0 3px rgba(37,99,235,.4);
+}
+
+html { font-size: 14px; }
+body { font-family:'Poppins',sans-serif; background:var(--s50); color:var(--s900); height:100vh; display:flex; overflow:hidden; }
+
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-thumb { background:var(--s300); border-radius:99px; }
+
+.skip { position:absolute; left:-9999px; background:var(--blue-600); color:#fff; padding:8px 14px; border-radius:0 0 8px 0; font-size:13px; font-weight:600; z-index:999; }
+.skip:focus { left:0; }
+
+/* ── SIDEBAR ── */
+#sb { width:var(--sb); background:var(--s900); display:flex; flex-direction:column; flex-shrink:0; position:fixed; inset:0 auto 0 0; z-index:50; overflow-y:auto; transition:transform 250ms ease; }
+#sb-ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:40; backdrop-filter:blur(2px); }
+#sb-ov.on { display:block; }
+.sb-top { padding:18px 14px 14px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:10px; }
+.sb-logo { width:42px; height:42px; border-radius:10px; overflow:hidden; flex-shrink:0; background:var(--s800); display:flex; align-items:center; justify-content:center; }
+.sb-logo img { width:100%; height:100%; object-fit:contain; }
+.sb-name { font-family:'Poppins',sans-serif; font-weight:700; font-size:12.5px; color:#fff; line-height:1.3; }
+.sb-sub  { font-size:11px; color:var(--s400); margin-top:1px; }
+.sb-nav  { padding:10px 8px; flex:1; }
+.sb-sec  { font-size:10px; font-weight:700; color:var(--s400); letter-spacing:.08em; text-transform:uppercase; padding:8px 8px 4px; margin-top:4px; }
+.nav-btn { width:100%; display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:6px; cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; text-align:left; color:var(--s300); background:transparent; border:none; transition:background var(--tr),color var(--tr); margin-bottom:1px; }
+.nav-btn svg { flex-shrink:0; opacity:.8; }
+.nav-btn:hover { background:rgba(255,255,255,.08); color:#fff; }
+.nav-btn[aria-current] { background:var(--blue-600); color:#fff; font-weight:600; }
+.nav-btn[aria-current] svg { opacity:1; }
+.sb-foot { padding:10px 8px 14px; border-top:1px solid rgba(255,255,255,.08); font-size:11px; color:var(--s400); display:flex; align-items:center; gap:6px; }
+
+/* ── MAIN ── */
+#main { margin-left:var(--sb); flex:1; height:100vh; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+#topbar { background:var(--w); border-bottom:1px solid var(--s200); padding:0 22px; height:54px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+#hbg { display:none; background:none; border:none; cursor:pointer; padding:6px; border-radius:6px; color:var(--s600); }
+#hbg:hover { background:var(--s100); }
+.tb-title { font-family:'Poppins',sans-serif; font-weight:600; font-size:16px; color:var(--s900); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tb-badge { font-size:11px; background:var(--blue-50); color:var(--blue-600); border:1px solid var(--blue-100); padding:3px 10px; border-radius:99px; font-weight:600; white-space:nowrap; }
+
+/* ── CONTENT ── */
+#content { flex:1; overflow-y:auto; padding:22px; min-height:0; }
+.view { display:none; }
+.view.on { display:block; }
+.pg-title { font-family:'Poppins',sans-serif; font-weight:700; font-size:21px; color:var(--s900); margin-bottom:3px; }
+.pg-sub   { font-size:13px; color:var(--s500); margin-bottom:18px; line-height:1.6; max-width:680px; }
+
+/* ── CARD ── */
+.card { background:var(--w); border-radius:var(--rl); box-shadow:var(--shadow); border:1px solid var(--s200); margin-bottom:14px; }
+.ch { padding:13px 18px; border-bottom:1px solid var(--s100); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.ct { font-family:'Poppins',sans-serif; font-weight:600; font-size:15px; color:var(--s900); display:flex; align-items:center; gap:7px; }
+.cb { padding:18px; }
+
+/* ── BUTANG ── */
+.btn { display:inline-flex; align-items:center; gap:7px; padding:8px 15px; border-radius:7px; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; border:1.5px solid transparent; transition:all var(--tr); white-space:nowrap; }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+.btn-p  { background:var(--blue-600); color:#fff; } .btn-p:hover  { background:var(--blue-700); }
+.btn-s  { background:var(--s100); color:var(--s700); border-color:var(--s200); } .btn-s:hover  { background:var(--s200); }
+.btn-g  { background:var(--green-600); color:#fff; } .btn-g:hover  { background:var(--green-700); }
+.btn-d  { background:var(--red-50); color:var(--red-600); } .btn-d:hover  { background:#fecaca; }
+.btn-o  { background:var(--w); color:var(--blue-600); border-color:var(--blue-600); } .btn-o:hover { background:var(--blue-50); }
+.btn-sm { padding:6px 11px; font-size:12px; }
+.btn-full { width:100%; justify-content:center; }
+
+/* ── BORANG ── */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:13px; }
+.full { grid-column:1/-1; }
+.fg  { display:flex; flex-direction:column; gap:4px; }
+.fl  { font-size:12px; font-weight:600; color:var(--s700); display:flex; align-items:center; gap:4px; }
+.fl .req { color:var(--red-600); }
+.fi,.fta,.fsel { padding:8px 11px; border:1.5px solid var(--s200); border-radius:6px; font-family:inherit; font-size:13px; color:var(--s900); outline:none; background:var(--w); transition:border var(--tr),box-shadow var(--tr); width:100%; }
+.fi:focus,.fta:focus,.fsel:focus { border-color:var(--blue-600); box-shadow:var(--ring); }
+.fta { resize:vertical; min-height:88px; font-family:inherit; }
+.fh  { font-size:11px; color:var(--s500); }
+.fsel { cursor:pointer; }
+
+/* ── PILIHAN KOMPONEN SAFE (kad boleh klik) ── */
+.komp-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:11px; }
+.komp-card { border:2px solid var(--s200); border-radius:10px; padding:14px; cursor:pointer; transition:all var(--tr); background:var(--w); text-align:center; }
+.komp-card:hover { border-color:var(--s300); background:var(--s50); }
+.komp-card .ic { font-size:24px; margin-bottom:6px; }
+.komp-card .nm { font-weight:700; font-size:12.5px; color:var(--s800); }
+.komp-card .ds { font-size:10.5px; color:var(--s500); margin-top:2px; line-height:1.4; }
+.komp-card.sel-asp  { border-color:#e11d48; background:#fff1f2; }
+.komp-card.sel-prs  { border-color:var(--blue-600); background:var(--blue-50); }
+.komp-card.sel-kb   { border-color:var(--purple-600); background:var(--purple-50); }
+.subtag-wrap { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+.subtag-chip { padding:5px 12px; border-radius:99px; border:1.5px solid var(--s200); font-size:12px; font-weight:600; cursor:pointer; transition:all var(--tr); background:var(--w); color:var(--s600); }
+.subtag-chip.on { background:var(--s900); color:#fff; border-color:var(--s900); }
+
+/* ── GAMBAR SLOT DINAMIK ── */
+.gm-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:11px; }
+.gm-slot { border:2px solid var(--s200); border-radius:10px; aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; position:relative; text-align:center; padding:10px; overflow:hidden; background:var(--w); }
+.gm-slot img { width:100%; height:100%; object-fit:cover; border-radius:6px; display:block; position:absolute; inset:0; }
+.gm-slot-num { position:absolute; top:6px; left:6px; background:rgba(15,23,42,.75); color:#fff; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:99px; z-index:2; }
+.btn-clr { position:absolute; top:6px; right:6px; background:rgba(0,0,0,.55); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; z-index:2; }
+.gm-add { border:2px dashed var(--s300); border-radius:10px; aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; cursor:pointer; background:var(--s50); transition:all var(--tr); position:relative; }
+.gm-add:hover { border-color:#60a5fa; background:var(--blue-50); }
+.gm-add input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.gm-add-ico { font-size:26px; color:var(--s400); }
+.gm-add-lbl { font-size:11.5px; color:var(--s500); font-weight:600; }
+
+/* ── BADGE ── */
+.badge { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:99px; font-size:10.5px; font-weight:700; white-space:nowrap; }
+.b-blue  { background:var(--blue-100); color:var(--blue-700); }
+.b-green { background:var(--green-50);  color:var(--green-700); }
+.b-muted { background:var(--s100);      color:var(--s600); }
+.b-rose  { background:#fff1f2; color:#e11d48; }
+.b-purple{ background:var(--purple-100); color:var(--purple-600); }
+
+/* ── JADUAL ── */
+.tbl-wrap { overflow-x:auto; border-radius:var(--r); border:1px solid var(--s200); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead th { background:var(--s900); color:#fff; padding:9px 13px; text-align:left; font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; position:sticky; top:0; }
+tbody tr { border-bottom:1px solid var(--s100); transition:background var(--tr); }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover td { background:var(--blue-50) !important; }
+td { padding:8px 13px; vertical-align:middle; line-height:1.5; }
+
+/* ── UTILITI KELAS ── */
+.hidden { display:none !important; }
+
+/* ── MODAL ── */
+#mo { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; backdrop-filter:blur(3px); align-items:center; justify-content:center; padding:14px; }
+#mo.on { display:flex; }
+#mo-box { background:var(--w); border-radius:var(--rl); box-shadow:var(--shadowL); width:500px; max-width:100%; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
+.mo-h { padding:14px 18px; border-bottom:1px solid var(--s100); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.mo-t { font-family:'Poppins',sans-serif; font-weight:600; font-size:16px; }
+.mo-x { background:var(--s100); border:none; border-radius:6px; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--s600); font-size:15px; }
+.mo-x:hover { background:var(--s200); }
+.mo-b { padding:18px; overflow-y:auto; font-size:13px; color:var(--s700); line-height:1.7; }
+.mo-f { padding:12px 18px; border-top:1px solid var(--s100); display:flex; gap:8px; justify-content:flex-end; }
+
+/* ── TOAST ── */
+#tc { position:fixed; bottom:18px; right:18px; z-index:300; display:flex; flex-direction:column; gap:7px; }
+.toast { display:flex; align-items:center; gap:7px; padding:10px 15px; border-radius:8px; font-size:13px; font-weight:600; box-shadow:var(--shadowL); max-width:300px; }
+.toast.ok  { background:var(--green-600); color:#fff; }
+.toast.err { background:var(--red-600);   color:#fff; }
+.toast.inf { background:var(--s800);      color:#fff; }
+
+/* ── LOADING ── */
+#ld { display:none; position:fixed; inset:0; background:rgba(255,255,255,.75); z-index:400; align-items:center; justify-content:center; flex-direction:column; gap:10px; }
+#ld.on { display:flex; }
+.spin { width:30px; height:30px; border:3px solid var(--s200); border-top-color:var(--blue-600); border-radius:50%; animation:sp .8s linear infinite; }
+@keyframes sp { to { transform:rotate(360deg); } }
+#ld span { font-size:13px; font-weight:600; color:var(--s700); }
+
+/* ════════════════════════════════════════════════════════════════
+   PRATONTON CETAKAN — layout gambar adaptif ikut bilangan (1–N)
+   ════════════════════════════════════════════════════════════════ */
+.pp { background:#fff; max-width:794px; margin:0 auto; padding:22px 30px; border:1px solid var(--s200); border-radius:8px; font-size:13px; color:#222; line-height:1.6; font-family:'Poppins',sans-serif; }
+
+.pp-header-wrap { border-bottom:3px solid #1a237e; padding-bottom:12px; margin-bottom:14px; }
+.pk { display:flex; align-items:center; gap:16px; }
+.pk-logo { width:64px; height:64px; object-fit:contain; flex-shrink:0; }
+.pk-text { flex:1; }
+.pk-text h1 { font-family:'Poppins',sans-serif; font-weight:700; font-size:14px; color:#1a237e; text-transform:uppercase; letter-spacing:.05em; }
+.pk-text p  { font-size:11.5px; color:#555; margin-top:1px; }
+.pk-divider { text-align:center; }
+.pk-divider h2 { font-family:'Poppins',sans-serif; font-weight:700; font-size:13px; color:#1a237e; text-transform:uppercase; letter-spacing:.06em; margin:2px 0 0; }
+.pk-divider .komp-lbl { font-size:11px; font-weight:600; color:#555; margin-top:2px; }
+.pk-hashtag { text-align:center; font-family:'Poppins',sans-serif; font-weight:700; font-size:12px; color:#1a237e; letter-spacing:.02em; margin-top:9px; }
+
+.pt { width:100%; border-collapse:collapse; margin-bottom:11px; font-size:12.5px; }
+.pt td { border:1px solid #bbb; padding:6px 9px; vertical-align:top; }
+.pt td:first-child { font-weight:600; background:#eef2ff; width:26%; white-space:nowrap; }
+
+.ps { margin-bottom:10px; }
+.ps-t { font-weight:700; font-size:12px; text-transform:uppercase; color:#1a237e; letter-spacing:.05em; border-left:3px solid #1a237e; padding-left:7px; margin-bottom:5px; }
+.ps-b { border:1px solid #ddd; padding:7px 9px; border-radius:4px; font-size:12.5px; min-height:40px; white-space:pre-wrap; line-height:1.65; }
+
+/* gambar adaptif — susun grid mengikut bilangan sebenar */
+.pg-wrap { margin-top:8px; }
+.pg-t { font-weight:700; font-size:12px; text-transform:uppercase; color:#1a237e; letter-spacing:.05em; border-left:3px solid #1a237e; padding-left:7px; margin-bottom:6px; }
+.pg-grid { display:grid; gap:8px; grid-template-columns:repeat(2,1fr); }
+.pg-grid.pg1 { grid-template-columns:1fr; max-width:420px; margin:0 auto; }
+.pg-grid.pg-many { grid-template-columns:repeat(3,1fr); }
+.pg-item { border:1px solid #ccc; border-radius:4px; overflow:hidden; position:relative; }
+.pg-item img { object-position:center 25%; }
+
+/* Kawalan laras gambar (hanya pada skrin — tersembunyi automatik semasa cetak) */
+.pg-adj { position:absolute; bottom:5px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:3px; background:rgba(15,23,42,.75); padding:4px 7px; border-radius:99px; opacity:0; transition:opacity var(--tr); white-space:nowrap; }
+.pg-item:hover .pg-adj, .pg-item:focus-within .pg-adj { opacity:1; }
+.pg-adj button { width:22px; height:22px; border:none; border-radius:50%; background:rgba(255,255,255,.18); color:#fff; font-size:11px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; flex-shrink:0; }
+.pg-adj button:hover { background:rgba(255,255,255,.4); }
+.pg-adj button.aktif { background:var(--blue-600); }
+.pg-adj-val { color:#fff; font-size:9.5px; font-weight:700; min-width:26px; text-align:center; opacity:.85; }
+.pg-adj .pg-adj-sep { width:1px; align-self:stretch; background:rgba(255,255,255,.3); margin:2px 2px; }
+@media print { .pg-adj { display:none !important; } }
+.pg-item img { width:100%; object-fit:cover; display:block; height:150px; }
+.pg-grid.pg1 .pg-item img { height:280px; }
+.pg-cap { background:#f5f5f5; border-top:1px solid #ddd; font-size:10px; color:#666; padding:3px 7px; text-align:center; }
+
+/* pengesahan */
+.pf { margin-top:20px; padding-top:14px; display:flex; justify-content:space-between; gap:20px; }
+.pf-blk { flex:1; }
+.pf-lbl  { font-size:11.5px; color:#555; margin-bottom:6px; }
+.pf-line { border-top:1px solid #333; padding-top:4px; font-size:12px; }
+.pf-name  { font-weight:700; }
+.pf-title { font-size:11px; color:#555; }
+.pf-tarikh { font-size:11px; color:#777; margin-top:2px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:1023px) {
+  #sb { transform:translateX(calc(-1 * var(--sb))); }
+  #sb.on { transform:translateX(0); box-shadow:var(--shadowL); }
+  #main { margin-left:0; }
+  #hbg { display:flex; align-items:center; justify-content:center; }
+  .g2,.g3,.komp-grid { grid-template-columns:1fr; }
+  .full { grid-column:1; }
+}
+@media (max-width:600px) {
+  #content { padding:14px; }
+  #mo-box  { width:100%; }
+  .gm-grid { grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); }
+  .pg-grid,.pg-grid.pg-many { grid-template-columns:1fr 1fr; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HALAMAN UTAMA > DOKUMENTASI — tambahan sistem fail digital SAFE
+   ════════════════════════════════════════════════════════════════ */
+
+/* Ikon log masuk/keluar kecil di footer sidebar */
+.sb-foot { justify-content:space-between; }
+.sb-foot-txt { display:flex; align-items:center; gap:6px; }
+.sb-icon-btn { background:none; border:none; cursor:pointer; color:var(--s400); padding:5px; border-radius:6px; display:flex; align-items:center; justify-content:center; transition:background var(--tr),color var(--tr); }
+.sb-icon-btn:hover { background:rgba(255,255,255,.1); color:#fff; }
+.sb-icon-btn.on-admin { color:var(--green-600); }
+
+/* Banner atas Dokumentasi */
+.dok-banner { width:100%; margin-bottom:16px; border-radius:var(--rl); overflow:hidden; box-shadow:var(--shadow); background:var(--s100); position:relative; }
+.dok-banner img { width:100%; height:auto; display:block; }
+@media (min-width:1024px) {
+  .dok-banner { margin-bottom:20px; }
+  .dok-banner img { max-height:400px; object-fit:contain; object-position:center; }
+}
+
+/* Grid kad dokumen (paparan awam) — gaya sama seperti sistem Ping Pong */
+.doc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; min-width:0; }
+@media (min-width:1024px) { .doc-grid { grid-template-columns:repeat(2,1fr); gap:16px; } }
+.doc-card { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--w); border:1px solid var(--s200); border-left:4px solid var(--blue-600); border-radius:var(--rl); font-weight:700; font-size:14px; color:var(--s900); box-shadow:var(--shadow); transition:transform var(--tr),box-shadow var(--tr); cursor:pointer; text-decoration:none; min-width:0; max-width:100%; box-sizing:border-box; overflow:hidden; }
+.doc-card:hover { transform:translateY(-2px); box-shadow:var(--shadowL); }
+.doc-ic { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+@media (min-width:1024px) { .doc-card { padding:18px 20px; font-size:15px; } .doc-ic { width:38px; height:38px; } }
+.doc-ic.t-pdf   { background:#fee2e2; color:#dc2626; }
+.doc-ic.t-img   { background:#dbeafe; color:#2563eb; }
+.doc-ic.t-note  { background:#fef9c3; color:#ca8a04; }
+.doc-ic.t-link  { background:#ede9fe; color:#7c3aed; }
+.doc-title { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.doc-badge { flex-shrink:0; font-size:10px; font-weight:800; letter-spacing:.03em; padding:2px 8px; border-radius:99px; white-space:nowrap; }
+.doc-badge.t-pdf  { background:#fee2e2; color:#dc2626; }
+.doc-badge.t-img  { background:#dbeafe; color:#2563eb; }
+.doc-badge.t-note { background:#fef9c3; color:#ca8a04; }
+.doc-ext { flex-shrink:0; opacity:.55; color:var(--s400); }
+.doc-empty { text-align:center; padding:40px 20px; color:var(--s500); font-size:13px; }
+
+/* Panel urus Dokumentasi (mod Admin) */
+.doc-admin-row { display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid var(--s200); border-radius:10px; margin-bottom:10px; background:var(--s50); }
+.doc-admin-row .dar-num { width:24px; height:24px; border-radius:50%; background:var(--s900); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:6px; }
+.doc-admin-row .dar-fields { flex:1; display:flex; flex-direction:column; gap:7px; min-width:0; }
+.doc-admin-row .dar-actions { display:flex; flex-direction:column; gap:5px; flex-shrink:0; }
+.dar-actions button { width:28px; height:28px; border-radius:6px; border:1px solid var(--s200); background:var(--w); cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--s600); transition:all var(--tr); }
+.dar-actions button:hover:not(:disabled) { background:var(--s100); }
+.dar-actions button:disabled { opacity:.35; cursor:not-allowed; }
+.dar-actions button.dar-del { color:var(--red-600); }
+.dar-actions button.dar-del:hover { background:var(--red-50); }
+.dar-row2 { display:flex; gap:7px; align-items:center; }
+
+/* Toggle switch (aktif/tidak aktif) */
+.toggle-switch { width:38px; height:21px; border-radius:99px; background:var(--s300); position:relative; cursor:pointer; flex-shrink:0; transition:background var(--tr); }
+.toggle-switch::after { content:''; position:absolute; top:2px; left:2px; width:17px; height:17px; border-radius:50%; background:#fff; transition:transform var(--tr); box-shadow:0 1px 2px rgba(0,0,0,.25); }
+.toggle-switch.active { background:var(--green-600); }
+.toggle-switch.active::after { transform:translateX(17px); }
+
+/* Modal Log Masuk (guna style ringkas berasingan drpd #mo generik) */
+#loginMo { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:250; align-items:center; justify-content:center; padding:14px; }
+#loginMo.on { display:flex; }
+.login-box { background:var(--w); border-radius:var(--rl); box-shadow:var(--shadowL); width:340px; max-width:100%; padding:22px; }
+.login-box h3 { font-family:'Poppins',sans-serif; font-weight:700; font-size:16px; margin-bottom:4px; }
+.login-box p.sub { font-size:12px; color:var(--s500); margin-bottom:16px; }
+.login-err { font-size:12px; color:var(--red-600); background:var(--red-50); padding:7px 10px; border-radius:6px; margin-top:8px; }
+
+/* Modal Penuh Skrin — PDF / Imej / Nota */
+.viewer-ov { display:none; position:fixed; inset:0; background:rgba(15,23,42,.92); z-index:260; flex-direction:column; }
+.viewer-ov.on { display:flex; }
+.viewer-hd { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; flex-shrink:0; }
+.viewer-hd .vt { color:#fff; font-weight:600; font-size:14px; font-family:'Poppins',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.viewer-hd .vc { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.viewer-x { background:rgba(255,255,255,.12); border:none; color:#fff; width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+.viewer-x:hover { background:rgba(255,255,255,.22); }
+.viewer-body { flex:1; overflow:auto; padding:0 18px 18px; display:flex; align-items:center; justify-content:center; min-height:0; position:relative; }
+.viewer-body iframe { width:100%; height:100%; border:none; border-radius:8px; background:#fff; }
+.viewer-body img { max-width:100%; max-height:100%; object-fit:contain; border-radius:8px; }
+.viewer-loading { position:absolute; inset:0 18px 18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:rgba(15,23,42,.92); border-radius:8px; z-index:2; }
+.viewer-loading.hidden { display:none; }
+.viewer-loading p { color:#cbd5e1; font-size:12.5px; }
+.viewer-note-body { background:#fff; border-radius:10px; padding:22px; width:100%; max-width:720px; max-height:100%; overflow-y:auto; font-size:13px; line-height:1.75; color:var(--s800); }
+
+/* Editor Nota (mod Admin) */
+#noteEdOv { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:270; align-items:center; justify-content:center; padding:14px; }
+#noteEdOv.on { display:flex; }
+.note-ed-box { background:#fff; border-radius:var(--rl); box-shadow:var(--shadowL); width:640px; max-width:100%; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
+.note-ed-tb { display:flex; gap:4px; padding:8px 10px; border-bottom:1px solid var(--s100); flex-wrap:wrap; }
+.note-ed-tb button { background:var(--s100); border:none; border-radius:6px; padding:6px 9px; cursor:pointer; font-size:12px; font-weight:600; color:var(--s700); }
+.note-ed-tb button:hover { background:var(--s200); }
+.note-ed-tb button.active { background:var(--s900); color:#fff; }
+.note-ed-body { flex:1; padding:16px 18px; overflow-y:auto; min-height:220px; outline:none; font-size:13px; line-height:1.7; }
+.note-ed-body:empty::before { content:attr(data-placeholder); color:var(--s400); }
+
+/* ════════════════════════════════════════════════════════════════
+   TANDATANGAN DIGITAL — kotak "Sertakan Tandatangan Digital"
+   ════════════════════════════════════════════════════════════════ */
+.ttd-box { border:1.5px dashed var(--s300); border-radius:8px; padding:10px 12px; margin-top:9px; background:var(--s50); }
+.ttd-chk-row { display:flex; align-items:center; gap:8px; cursor:pointer; }
+.ttd-chk-row input[type=checkbox] { width:16px; height:16px; cursor:pointer; accent-color:var(--blue-600); }
+.ttd-chk-row span { font-size:12.5px; font-weight:600; color:var(--s700); }
+.ttd-detail { display:none; margin-top:10px; padding-top:10px; border-top:1px dashed var(--s300); }
+.ttd-detail.on { display:block; }
+.ttd-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.ttd-preview { font-family:'Brittany Signature',cursive; font-size:26px; color:#1a237e; min-width:80px; text-align:center; padding:2px 10px; }
+.ttd-input-wrap { flex:1; min-width:160px; }
+.ttd-hint { font-size:10.5px; color:var(--s500); margin-top:4px; }
+.ttd-auto-tag { font-size:10px; background:var(--green-50); color:var(--green-700); padding:1px 7px; border-radius:99px; font-weight:700; margin-left:5px; }
+.ttd-manual-tag { font-size:10px; background:var(--amber-50); color:var(--amber-600); padding:1px 7px; border-radius:99px; font-weight:700; margin-left:5px; }
+
+/* ruang tandatangan digital dalam cetakan */
+.pf-ttd-slot { height:34px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:2px; }
+.pf-ttd-slot.kosong { height:34px; }
+.pf-ttd { font-family:'Brittany Signature',cursive; font-size:30px; line-height:1; color:#1a237e; white-space:nowrap; }
+
+
+/* ═══ MERENTAS DESA: Pendaftaran, Keputusan, Urus Setia ═══ */
+.md-g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.md-r { display:grid; grid-template-columns:30px 1.4fr 1.1fr 1.2fr 110px; gap:6px; margin-bottom:6px; align-items:center; }
+.md-r .fi { padding:6px 9px; }
+.md-no { font-weight:600; font-size:12px; color:var(--s600); }
+.md-b { display:inline-block; padding:2px 9px; border-radius:99px; background:var(--blue-100); color:var(--blue-700); font-size:11px; font-weight:600; }
+.md-b.x { background:var(--red-50); color:var(--red-600); }
+.md-b.o { background:var(--green-50); color:var(--green-700); }
+.md-err { color:var(--red-600); } .md-warn { color:var(--amber-600); } .md-ok { color:var(--green-600); }
+.md-scroll { overflow-x:auto; }
+.md-h4 { font-size:13px; font-weight:700; margin:12px 0 6px; color:var(--s700); }
+.md-note { font-size:12px; color:var(--s500); margin-bottom:10px; }
+.md-pv { display:none; max-width:100%; max-height:110px; margin-top:6px; border-radius:6px; }
+@media (max-width:1023px) { .md-g4 { grid-template-columns:1fr 1fr; } .md-r { grid-template-columns:28px 1fr; } .md-r > *:nth-child(n+3) { grid-column:2; } }
+
+/* Mod papan sahaja (dibuka dari ikon tab baharu: #tv=L / #tv=P) */
+body.tv-only #sb, body.tv-only #sb-ov, body.tv-only #topbar, body.tv-only .md-newtab { display:none !important; }
+body.tv-only #main { margin-left:0; }
+body.tv-only #content { padding:0; }
+body.tv-only #tvBox { margin:0; border-radius:0; min-height:100vh; padding:22px 28px; }
+
+/* Papan keputusan gaya TV */
+#tvBox { position:relative; background:#0d1117; color:#e6edf3; border-radius:var(--rl); padding:16px 18px; margin-bottom:14px; font-size:14px; box-shadow:var(--shadow); }
+#tvBox h2 { font-size:1.35em; margin-bottom:2px; }
+#tvBox small { color:#8b949e; display:block; }
+#tvBox .md-tools { position:absolute; top:10px; right:10px; display:flex; gap:6px; }
+#tvBox .md-tools button { background:rgba(255,255,255,.08); border:none; color:#8b949e; width:30px; height:30px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:.55; transition:opacity var(--tr); }
+#tvBox .md-tools button:hover { opacity:1; }
+#tvBox:fullscreen { overflow:auto; border-radius:0; padding:22px 28px; }
+#tvBox:fullscreen .md-pc-btn { display:none; }
+.md-tvl { display:grid; grid-template-columns:3fr 1.2fr; gap:16px; margin-top:10px; }
+.md-t { column-count:2; column-gap:20px; }
+.md-t div { display:grid; grid-template-columns:2.2em 1fr 3em 11em; gap:6px; padding:1px 0; line-height:1.25; border-bottom:1px solid #30363d; break-inside:avoid; }
+.md-t div:nth-child(-n+3) { color:#f2cc60; font-weight:700; }
+.md-t i { font-style:normal; }
+.md-i div { padding:2px 0; border-bottom:1px solid #30363d; }
+@media (max-width:1023px) { .md-tvl { grid-template-columns:1fr; } .md-t { column-count:1; } .md-t div { grid-template-columns:2.2em 1fr 2.6em 9em; } }
+.md-cr { display:grid; grid-template-columns:50px 170px 1fr; gap:8px; align-items:center; margin-bottom:6px; }
+</style>
+</head>
+<body>
+
+<a href="#content" class="skip">Langkau ke kandungan</a>
+<div id="sb-ov"></div>
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside id="sb">
+  <div class="sb-top">
+    <div class="sb-logo">
+      <img src="https://i.postimg.cc/qBcGF2Ww/Logo-SK-Adin.png" alt="Logo SK Adin" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-family:Poppins,sans-serif;font-weight:700;color:#fff;font-size:12px;\'>SAFE</span>'">
+    </div>
+    <div>
+      <div class="sb-name">SK Adin, Sarikei</div>
+      <div class="sb-sub">Merentas Desa 11TKB Sarikei 2026</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-sec">Halaman Utama</div>
+    <button class="nav-btn" data-v="v-dokumentasi" aria-current="page">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="18" x2="13" y2="18"/></svg>
+      Dokumentasi
+    </button>
+    <div class="sb-sec">Merentas Desa</div>
+    <button class="nav-btn" data-v="v-daftar">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Pendaftaran
+    </button>
+    <button class="nav-btn" data-v="v-keputusan" data-kat="L">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+      Keputusan L11TKB
+    </button>
+    <button class="nav-btn" data-v="v-keputusan" data-kat="P">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+      Keputusan P11TKB
+    </button>
+    <div id="sb-admin" style="display:none">
+      <div class="sb-sec">Admin</div>
+      <button class="nav-btn" data-v="v-admin">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Urus Setia
+      </button>
+    </div>
+  </nav>
+
+  <div class="sb-foot">
+    <span class="sb-foot-txt">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Dibangunkan oleh Cikgu Halim
+    </span>
+    <button class="sb-icon-btn" id="btnLoginAdmin" title="Log Masuk Admin / Urus Setia" aria-label="Log Masuk Admin">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+    </button>
+    <button class="sb-icon-btn on-admin" id="btnLogoutAdmin" title="Log Keluar Admin" aria-label="Log Keluar Admin" style="display:none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ════════ MAIN ════════ -->
+<div id="main">
+  <div id="topbar">
+    <button id="hbg" aria-label="Menu">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <span class="tb-title" id="tb-title">Halaman Utama</span>
+    <span class="tb-badge" id="tb-badge">Halaman Utama</span>
+  </div>
+
+  <div id="content">
+
+    <!-- ══════════════ HALAMAN UTAMA: DOKUMENTASI ══════════════ -->
+    <div class="view on" id="v-dokumentasi">
+      <div class="dok-banner">
+        <img src="https://i.postimg.cc/L8hqFQsr/banner2.jpg" alt="Banner Merentas Desa 11TKB Daerah Sarikei 2026" onerror="this.parentElement.style.display='none'">
+      </div>
+
+      <!-- ── Panel Admin: Urus Dokumentasi (kelihatan hanya jika log masuk) ── -->
+      <div class="card no-print" id="dok-admin-panel" style="display:none">
+        <div class="ch">
+          <span class="ct">📁 Urus Senarai Dokumentasi</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-s btn-sm" onclick="tambahDokumen()">+ Tambah Dokumen</button>
+            <button class="btn btn-g btn-sm" onclick="simpanSenaraiDokumentasi()">Simpan Perubahan</button>
+          </div>
+        </div>
+        <div class="cb">
+          <p class="fh" style="margin-bottom:10px">Isikan Judul dan URL/Pautan setiap dokumen (cth. pautan Google Drive/PDF/Google Docs). Guna butang ↑↓ untuk susun semula, dan togol untuk aktif/nyahaktifkan paparan awam.</p>
+          <div id="dok-admin-list"></div>
+          <div class="doc-empty" id="dok-admin-empty" style="display:none">Tiada dokumen lagi. Klik "+ Tambah Dokumen" untuk mula.</div>
+        </div>
+      </div>
+
+      <!-- ── Paparan Awam: Grid Dokumen ── -->
+      <div class="card">
+        <div class="ch">
+          <span class="ct">📄 Senarai Dokumen</span>
+          <span class="badge b-muted" id="dok-count-badge">0 dokumen</span>
+        </div>
+        <div class="cb">
+          <div class="doc-grid" id="dok-grid"></div>
+          <div class="doc-empty" id="dok-empty" style="display:none">Tiada dokumen tersedia buat masa ini.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ MERENTAS DESA: PENDAFTARAN ══════════════ -->
+    <div class="view" id="v-daftar">
+      <div id="mdLogin" class="card">
+        <div class="ch"><span class="ct">Log masuk sekolah</span></div>
+        <div class="cb">
+          <div class="fg" style="max-width:360px"><label class="fl" for="mdKod">Kod sekolah (contoh: YBA1234)</label><input id="mdKod" class="fi" autocomplete="off" onkeydown="if(event.key==='Enter')mdMasuk()"></div>
+          <p style="margin-top:12px"><button class="btn btn-p" onclick="mdMasuk()">Masuk</button></p>
+          <div id="mdMLogin" style="margin-top:8px;font-size:13px"></div>
+        </div>
+      </div>
+      <div id="mdSenaraiCard" class="card">
+        <div class="ch"><span class="ct">Senarai Penyertaan Sekolah</span><span id="mdSenaraiJum" class="md-b"></span></div>
+        <div class="cb">
+          <div id="mdSenaraiMsg" class="md-note">Memuatkan…</div>
+          <div class="md-scroll"><table id="mdSenaraiTbl" class="hidden"><thead><tr><th>#</th><th>Sekolah</th><th>Lelaki</th><th>Perempuan</th><th>Jumlah</th><th>Status</th></tr></thead><tbody id="mdSenarai"></tbody></table></div>
+        </div>
+      </div>
+      <div id="mdFormWrap" class="hidden">
+        <div class="card"><div class="cb" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-s btn-sm" onclick="mdBalik()">← Kembali</button> <b id="mdTajuk"></b> <span id="mdStatus"></span>
+        </div></div>
+        <div class="card"><div class="ch"><span class="ct">Maklumat pasukan</span></div><div class="cb"><div class="md-g4" id="mdPf"></div></div></div>
+        <div class="card"><div class="ch"><span class="ct">Senarai peserta</span></div><div class="cb">
+          <p class="md-note">Isi No. KP (12 digit) atau No. Sijil Lahir. Nombor peserta dijana automatik.</p>
+          <div id="mdBaris"></div><p id="mdKira" style="margin:8px 0;font-size:13px"></p>
+          <button class="btn btn-p" id="mdSimpan" onclick="mdSimpan()">Simpan</button> <button class="btn btn-s" onclick="mdCetak()">Cetak borang</button>
+          <div id="mdMForm" style="margin-top:10px;font-size:13px"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ MERENTAS DESA: KEPUTUSAN (L / P) ══════════════ -->
+    <div class="view" id="v-keputusan">
+      <div id="tvBox">
+        <div class="md-tools">
+          <button onclick="mdTvFull()" title="Skrin penuh" aria-label="Skrin penuh"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+          <button class="md-newtab" onclick="mdTvTab()" title="Buka dalam tab baharu (untuk skrin penuh)" aria-label="Buka dalam tab baharu"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg></button>
+          <button class="md-pc-btn" onclick="mdPcLogin()" title="Log masuk pencatat" aria-label="Log masuk pencatat"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+        </div>
+        <h2 id="tvT">KEDUDUKAN PASUKAN</h2><small id="tvS">Memuatkan…</small>
+        <div class="md-tvl"><div class="md-t" id="tvB"></div><div class="md-i"><b id="tvH">10 TERBAIK (INDIVIDU)</b><div id="tvI"></div></div></div>
+        <small id="tvF" style="margin-top:8px"></small>
+      </div>
+
+      <!-- Panel pencatat: kelihatan selepas log masuk pencatat/admin -->
+      <div id="mdCatat" class="hidden">
+        <div class="card">
+          <div class="ch"><span class="ct">Catat Markah – <span id="mdCatKat"></span></span><span><span id="mdRl" class="fh"></span> <button class="btn btn-s btn-sm" onclick="mdPcKeluar()">Log keluar pencatat</button></span></div>
+          <div class="cb">
+            <div class="fg" style="max-width:220px;margin-bottom:10px"><label class="fl" for="mdMula">Mula kedudukan</label><input id="mdMula" class="fi" type="number" value="1" min="1" onchange="mdBaris()"></div>
+            <p class="md-note">Taip No. Peserta (contoh ADIN 33) mengikut borang. Nama dan sekolah dipaparkan untuk disemak.</p>
+            <div id="mdRows"></div>
+            <button class="btn btn-p" id="mdHb" onclick="mdHantar()">Hantar</button> <span id="mdMC" style="font-size:13px"></span>
+            <p id="mdJur" style="margin-top:8px;font-size:13px"></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Semakan kedua dan pembetulan</span><button class="btn btn-s btn-sm" onclick="mdEntri()">Muat entri kategori ini</button></div>
+          <div class="cb md-scroll"><div id="mdEnt"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ ADMIN: URUS SETIA ══════════════ -->
+    <div class="view" id="v-admin">
+      <div class="card">
+        <div class="ch"><span class="ct">Dashboard Urus Setia – Pendaftaran</span></div>
+        <div class="cb">
+          <p id="mdRingkas" style="margin-bottom:10px;font-size:13px"></p>
+          <p style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-s btn-sm" onclick="mdSemua('disahkan',true,'Tandakan DISAHKAN untuk semua sekolah yang sudah mendaftar?')">Sahkan semua</button>
+            <button class="btn btn-s btn-sm" onclick="mdSemua('disahkan',false,'Batalkan status DISAHKAN semua sekolah?')">Batal sahkan semua</button>
+            <button class="btn btn-s btn-sm" onclick="mdSemua('kunci',true,'KUNCI semua sekolah? Sekolah tidak lagi boleh menyunting.')">Kunci semua</button>
+            <button class="btn btn-s btn-sm" onclick="mdSemua('kunci',false,'Buka kunci semua sekolah?')">Buka kunci semua</button>
+          </p>
+          <div id="mdMAdmin" style="font-size:13px"></div>
+          <div class="md-scroll"><table><thead><tr><th>#</th><th>Kod</th><th>Sekolah</th><th>Singkatan</th><th>L</th><th>P</th><th>Daftar</th><th>Disahkan</th><th>Kunci</th><th></th></tr></thead><tbody id="mdJadual"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ct">Laporan Keputusan</span></div>
+        <div class="cb">
+          <p style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-s btn-sm" onclick="mdLapor(false)">Laporan hadiah</button> <button class="btn btn-s btn-sm" onclick="mdLapor(true)">Rujukan wakil (dalaman)</button></p>
+          <div id="mdLapW" class="hidden" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ct">Pautan &amp; Banner (laman Google Sites)</span><span class="fh">dipaparkan oleh pautan.html</span></div>
+        <div class="cb">
+          <div class="g2">
+            <div class="fg"><label class="fl" for="mdPt">Tajuk</label><input id="mdPt" class="fi"></div>
+            <div class="fg"><label class="fl" for="mdPb">Banner (https:// atau banner.jpg)</label><input id="mdPb" class="fi" oninput="mdPrevBanner()"><img id="mdPv" class="md-pv" alt=""><small id="mdPvm" class="md-err"></small></div>
+            <div class="fg"><label class="fl" for="mdPd">Deskripsi</label><input id="mdPd" class="fi"></div>
+            <div class="fg"><label class="fl" for="mdPu">Pengumuman (contoh: tarikh mesyuarat dan larian)</label><input id="mdPu" class="fi"></div>
+          </div>
+          <label class="fl" style="margin:10px 0"><input type="checkbox" id="mdPa"> Papar banner</label>
+          <div class="md-scroll"><table><thead><tr><th>Susun</th><th>Aktif</th><th>Kategori</th><th>Tajuk</th><th>URL (https://)</th><th></th></tr></thead><tbody id="mdPl"></tbody></table></div>
+          <p style="margin-top:10px;display:flex;gap:6px"><button class="btn btn-s btn-sm" onclick="mdTPaut()">+ Tambah pautan</button> <button class="btn btn-g btn-sm" onclick="mdSPaut()">Simpan pautan</button></p>
+          <div id="mdMPaut" style="font-size:13px"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ══ MODAL ══ -->
+<div id="mo">
+  <div id="mo-box" role="dialog" aria-modal="true" aria-labelledby="mo-ttl">
+    <div class="mo-h">
+      <span class="mo-t" id="mo-ttl">Maklumat</span>
+      <button class="mo-x" onclick="closeMo()" aria-label="Tutup">✕</button>
+    </div>
+    <div class="mo-b" id="mo-bod"></div>
+    <div class="mo-f" id="mo-ft"><button class="btn btn-s" onclick="closeMo()">Tutup</button></div>
+  </div>
+</div>
+
+<!-- ══ MODAL LOG MASUK ADMIN ══ -->
+<div id="loginMo">
+  <div class="login-box" role="dialog" aria-modal="true" aria-labelledby="login-ttl">
+    <h3 id="login-ttl">Log Masuk Admin</h3>
+    <p class="sub">Untuk Admin / Urus Setia: urus Dokumentasi, pendaftaran dan keputusan Merentas Desa.</p>
+    <form id="loginForm">
+      <div class="fg">
+        <label class="fl">Kata Laluan</label>
+        <input class="fi" type="password" id="loginKataLaluan" placeholder="Masukkan kata laluan admin" required autocomplete="current-password">
+      </div>
+      <div class="login-err" id="loginErr" style="display:none">Kata laluan salah. Sila cuba lagi.</div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button type="button" class="btn btn-s btn-full" onclick="closeLoginMo()">Batal</button>
+        <button type="submit" class="btn btn-p btn-full">Log Masuk</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ PENAYANG PDF ══ -->
+<div id="pdfOv" class="viewer-ov">
+  <div class="viewer-hd">
+    <span class="vt" id="pdfOvTitle">Dokumen PDF</span>
+    <div class="vc">
+      <a id="pdfOvOpenTab" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-s btn-sm" style="background:rgba(255,255,255,.12);color:#fff">Buka Tab Baru</a>
+      <button class="viewer-x" onclick="closePdfViewer()" aria-label="Tutup">✕</button>
+    </div>
+  </div>
+  <div class="viewer-body">
+    <div class="viewer-loading" id="pdfOvLoading"><div class="spin"></div><p>Memuatkan dokumen PDF...</p></div>
+    <iframe id="pdfOvFrame" title="Paparan PDF"></iframe>
+  </div>
+</div>
+
+<!-- ══ PENAYANG IMEJ ══ -->
+<div id="imgOv" class="viewer-ov">
+  <div class="viewer-hd">
+    <span class="vt" id="imgOvTitle">Imej</span>
+    <div class="vc">
+      <a id="imgOvOpenTab" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-s btn-sm" style="background:rgba(255,255,255,.12);color:#fff">Buka Tab Baru</a>
+      <button class="viewer-x" onclick="closeImageViewer()" aria-label="Tutup">✕</button>
+    </div>
+  </div>
+  <div class="viewer-body">
+    <div class="viewer-loading" id="imgOvLoading"><div class="spin"></div><p id="imgOvLoadingTxt">Memuatkan imej...</p></div>
+    <img id="imgOvImg" src="" alt="">
+  </div>
+</div>
+
+<!-- ══ PENAYANG NOTA ══ -->
+<div id="noteOv" class="viewer-ov">
+  <div class="viewer-hd">
+    <span class="vt" id="noteOvTitle">Nota</span>
+    <div class="vc"><button class="viewer-x" onclick="closeNoteViewer()" aria-label="Tutup">✕</button></div>
+  </div>
+  <div class="viewer-body"><div class="viewer-note-body" id="noteOvBody"></div></div>
+</div>
+
+<!-- ══ EDITOR NOTA (Admin) ══ -->
+<div id="noteEdOv">
+  <div class="note-ed-box" role="dialog" aria-modal="true">
+    <div class="mo-h">
+      <span class="mo-t">Edit Nota Dokumen</span>
+      <button class="mo-x" onclick="closeNoteEditor()" aria-label="Tutup">✕</button>
+    </div>
+    <div class="note-ed-tb">
+      <button type="button" data-cmd="bold"><b>B</b></button>
+      <button type="button" data-cmd="italic"><i>I</i></button>
+      <button type="button" data-cmd="underline"><u>U</u></button>
+      <button type="button" data-cmd="insertUnorderedList">• Senarai</button>
+      <button type="button" data-cmd="insertOrderedList">1. Senarai</button>
+      <button type="button" id="noteEdCodeToggle" style="margin-left:auto">&lt;/&gt; Kod HTML</button>
+    </div>
+    <div class="code-mode-warning hidden" id="noteEdCodeWarning" style="background:var(--amber-50);color:var(--amber-600);font-size:11.5px;padding:7px 18px;border-bottom:1px solid #fde68a">⚠️ Mod Kod HTML — tampal terus kod HTML (cth. &lt;iframe&gt;, &lt;table&gt;, &lt;style&gt;) yang akan dipaparkan sepertimana ditulis kepada pengunjung.</div>
+    <div class="note-ed-body" id="noteEdBody" contenteditable="true" data-placeholder="Taip kandungan nota di sini..."></div>
+    <textarea class="note-ed-body hidden" id="noteEdCodeBody" style="font-family:monospace;font-size:12.5px;resize:none;border:none;width:100%" spellcheck="false" placeholder="Taip atau tampal kod HTML di sini... (contoh: <iframe>, <table>, <style>, dll)"></textarea>
+    <div class="mo-f">
+      <button class="btn btn-s" onclick="closeNoteEditor()">Batal</button>
+      <button class="btn btn-g" onclick="simpanNoteEditor()">Simpan Nota</button>
+    </div>
+  </div>
+</div>
+
+<div id="tc"></div>
+<div id="ld"><div class="spin"></div><span id="ld-msg">Memproses...</span></div>
+
+<script>
+/* ── UTILITI ── */
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function toast(msg, type='inf') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`; el.textContent = msg;
+  document.getElementById('tc').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, 3200);
+}
+function load(msg='Memproses...') { document.getElementById('ld-msg').textContent = msg; document.getElementById('ld').classList.add('on'); }
+function unload() { document.getElementById('ld').classList.remove('on'); }
+function openMo(title, body, foot=null) {
+  document.getElementById('mo-ttl').textContent = title;
+  document.getElementById('mo-bod').innerHTML = body;
+  document.getElementById('mo-ft').innerHTML = foot || '<button class="btn btn-s" onclick="closeMo()">Tutup</button>';
+  document.getElementById('mo').classList.add('on');
+}
+function closeMo() { document.getElementById('mo').classList.remove('on'); }
+document.getElementById('mo').addEventListener('click', e => { if(e.target===e.currentTarget) closeMo(); });
+
+/* ── NAVIGASI ── */
+const TITLES = { 'v-dokumentasi':'Halaman Utama','v-daftar':'Pendaftaran','v-admin':'Urus Setia' };
+const BADGES = { 'v-dokumentasi':'Halaman Utama','v-daftar':'Merentas Desa','v-keputusan':'Merentas Desa','v-admin':'Admin' };
+
+function nav(id, kat) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById(id)?.classList.add('on');
+  document.querySelectorAll('.nav-btn[data-v]').forEach(b=>{
+    const ok = b.dataset.v===id && (!b.dataset.kat || b.dataset.kat===(kat||MDKAT));
+    if (ok) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  document.getElementById('tb-title').textContent = id==='v-keputusan' ? 'Keputusan '+((kat||MDKAT)==='L'?'Lelaki':'Perempuan')+' 11TKB' : (TITLES[id]||'');
+  document.getElementById('tb-badge').textContent = BADGES[id]||'';
+  closeSb();
+  if (window.mdHook) window.mdHook(id, kat);
+}
+document.querySelectorAll('.nav-btn[data-v]').forEach(b => b.addEventListener('click', () => {
+  const v = b.dataset.v;
+  nav(v, b.dataset.kat);
+  if (v === 'v-dokumentasi')      muatDokumentasi();
+}));
+
+/* ── SIDEBAR ── */
+function openSb()  { document.getElementById('sb').classList.add('on'); document.getElementById('sb-ov').classList.add('on'); }
+function closeSb() { document.getElementById('sb').classList.remove('on'); document.getElementById('sb-ov').classList.remove('on'); }
+document.getElementById('hbg').addEventListener('click', openSb);
+document.getElementById('sb-ov').addEventListener('click', closeSb);
+
+/* ── FETCH SHEETS VIA APPS SCRIPT ── */
+async function fetchTab(tab) {
+  if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('LETAK')) {
+    throw new Error('GOOGLE_SCRIPT_URL belum ditetapkan dalam kod HTML.');
+  }
+  const res = await fetch(`${GOOGLE_SCRIPT_URL}?tab=${encodeURIComponent(tab)}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const j = await res.json();
+  if (j.status === 'error') throw new Error(j.mesej);
+  return j.data || [];
+}
+
+/* ── FORMAT TARIKH ── */
+function formatTarikhPapar(raw) {
+  if (!raw) return '';
+  let s = String(raw).replace(/^'/, '').trim();
+  const isoMatch = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (isoMatch) s = isoMatch[1];
+  const dt = new Date(s + 'T00:00:00');
+  if (isNaN(dt.getTime())) return s;
+  return dt.toLocaleDateString('ms-MY', { day:'2-digit', month:'long', year:'numeric' });
+}
+function formatTarikhRingkas(raw) {
+  if (!raw) return '';
+  let s = String(raw).replace(/^'/, '').trim();
+  const isoMatch = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  return isoMatch ? isoMatch[1] : s;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HALAMAN UTAMA > DOKUMENTASI — sistem fail digital SAFE
+   Admin log masuk (ikon di footer sidebar) untuk urus senarai
+   dokumen (Links). Borang & Rekod SAFE kekal terbuka tanpa log masuk.
+   ════════════════════════════════════════════════════════════════ */
+let dokAdmin = false;
+let PW = ''; // kata laluan Admin (digunakan juga untuk sistem Merentas Desa)
+let dataDokumentasi = []; // { id, judul, url, aktif, susunan, nota }
+
+/* ── PENGESAN JENIS PAUTAN (termasuk pautan Google Drive) ── */
+function isPdfLink(url) {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  if (/\.pdf(\?|#|$)/.test(lower)) return true;
+  if (lower.includes('drive.google.com/file/')) return true;
+  if (lower.includes('drive.google.com/open')) return true;
+  return false;
+}
+function getPdfEmbedUrl(url) {
+  const driveFile = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveFile) return 'https://drive.google.com/file/d/' + driveFile[1] + '/preview';
+  const driveOpen = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (driveOpen && url.includes('drive.google.com')) return 'https://drive.google.com/file/d/' + driveOpen[1] + '/preview';
+  return 'https://mozilla.github.io/pdf.js/web/viewer.html?file=' + encodeURIComponent(url);
+}
+function isImageLink(url) {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  if (/\.(png|jpe?g|gif|webp|svg|bmp|avif)(\?|#|$)/.test(lower)) return true;
+  if (lower.includes('drive.google.com/uc') && lower.includes('export=view')) return true;
+  if (lower.includes('lh3.googleusercontent.com')) return true;
+  return false;
+}
+function isNoteLink(item) { return !item.url && !!item.nota; }
+
+/* ── LOG MASUK / LOG KELUAR ADMIN ── */
+function openLoginMo() {
+  document.getElementById('loginErr').style.display = 'none';
+  document.getElementById('loginKataLaluan').value = '';
+  document.getElementById('loginMo').classList.add('on');
+  setTimeout(() => document.getElementById('loginKataLaluan').focus(), 60);
+}
+function closeLoginMo() { document.getElementById('loginMo').classList.remove('on'); }
+document.getElementById('loginMo').addEventListener('click', e => { if (e.target === e.currentTarget) closeLoginMo(); });
+document.getElementById('btnLoginAdmin').addEventListener('click', openLoginMo);
+document.getElementById('btnLogoutAdmin').addEventListener('click', () => {
+  dokAdmin = false;
+  PW = '';
+  sessionStorage.removeItem('safe_admin_pw');
+  kemaskiniUiAdmin();
+  toast('Anda telah log keluar daripada Admin', 'inf');
+});
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const kataLaluan = document.getElementById('loginKataLaluan').value;
+  load('Mengesahkan...');
+  try {
+    const fd = new FormData();
+    fd.append('action', 'sahLogMasukAdmin');
+    fd.append('kataLaluan', kataLaluan);
+    const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: fd });
+    const j = await res.json();
+    unload();
+    if (j.status === 'ok' && j.sah) {
+      dokAdmin = true;
+      PW = kataLaluan;
+      sessionStorage.setItem('safe_admin_pw', kataLaluan);
+      closeLoginMo();
+      kemaskiniUiAdmin();
+      toast('Log masuk Admin berjaya ✓', 'ok');
+    } else {
+      document.getElementById('loginErr').style.display = 'block';
+    }
+  } catch (err) { unload(); toast('Ralat: ' + err.message, 'err'); }
+});
+function kemaskiniUiAdmin() {
+  document.getElementById('btnLoginAdmin').style.display = dokAdmin ? 'none' : 'flex';
+  document.getElementById('btnLogoutAdmin').style.display = dokAdmin ? 'flex' : 'none';
+  document.getElementById('dok-admin-panel').style.display = dokAdmin ? 'block' : 'none';
+  document.getElementById('sb-admin').style.display = dokAdmin ? 'block' : 'none';
+  if (!dokAdmin && document.getElementById('v-admin').classList.contains('on')) { nav('v-dokumentasi'); muatDokumentasi(); }
+  if (window.mdOnAdminChange) window.mdOnAdminChange();
+  if (dokAdmin) renderAdminDokumentasi();
+}
+
+/* ── MUAT SENARAI DOKUMENTASI DARIPADA SHEET ── */
+async function muatDokumentasi() {
+  load('Memuatkan Dokumentasi...');
+  try {
+    const rows = await fetchTab('Dokumentasi');
+    dataDokumentasi = rows.slice(1).filter(r => r && r[0]).map(r => ({
+      id: r[0] || '', judul: r[1] || '', url: r[2] || '',
+      aktif: r[3] === true || r[3] === 'TRUE' || r[3] === 'true',
+      susunan: Number(r[4]) || 0, nota: r[5] || ''
+    })).sort((a, b) => a.susunan - b.susunan);
+    renderDokumentasiAwam();
+    if (dokAdmin) renderAdminDokumentasi();
+    unload();
+  } catch (e) { unload(); toast('Ralat memuat Dokumentasi: ' + e.message, 'err'); }
+}
+
+/* ── PAPARAN AWAM: GRID DOKUMEN ── */
+function ikonDokumen(item) {
+  if (isPdfLink(item.url)) return { kelas: 't-pdf', svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' };
+  if (isImageLink(item.url)) return { kelas: 't-img', svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>' };
+  if (isNoteLink(item)) return { kelas: 't-note', svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="18" x2="13" y2="18"/></svg>' };
+  return { kelas: 't-link', svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' };
+}
+function renderDokumentasiAwam() {
+  const grid = document.getElementById('dok-grid');
+  const aktifSenarai = dataDokumentasi.filter(d => d.aktif);
+  document.getElementById('dok-count-badge').textContent = `${aktifSenarai.length} dokumen`;
+  document.getElementById('dok-empty').style.display = aktifSenarai.length ? 'none' : 'block';
+  grid.innerHTML = aktifSenarai.map(item => {
+    const ic = ikonDokumen(item);
+    const lencana = ic.kelas === 't-pdf' ? '<span class="doc-badge t-pdf">PDF</span>'
+      : ic.kelas === 't-img' ? '<span class="doc-badge t-img">IMEJ</span>'
+      : ic.kelas === 't-note' ? '<span class="doc-badge t-note">NOTA</span>'
+      : '<svg class="doc-ext" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+    return `
+      <div class="doc-card" onclick="bukaDokumen('${item.id}')">
+        <div class="doc-ic ${ic.kelas}">${ic.svg}</div>
+        <div class="doc-title">${esc(item.judul || 'Tanpa Tajuk')}</div>
+        ${lencana}
+      </div>`;
+  }).join('');
+}
+function bukaDokumen(id) {
+  const item = dataDokumentasi.find(d => d.id === id);
+  if (!item) return;
+  if (isNoteLink(item)) { openNoteViewer(item.nota, item.judul); return; }
+  if (isPdfLink(item.url)) { openPdfViewer(item.url, item.judul); return; }
+  if (isImageLink(item.url)) { openImageViewer(item.url, item.judul); return; }
+  if (item.url) window.open(item.url, '_blank', 'noopener');
+}
+
+/* ── PENAYANG PDF (sokong pautan Google Drive) ── */
+let pdfViewerToken = 0;
+function openPdfViewer(url, title) {
+  const loading = document.getElementById('pdfOvLoading');
+  const iframe = document.getElementById('pdfOvFrame');
+  const myToken = ++pdfViewerToken;
+
+  document.getElementById('pdfOvTitle').textContent = title || 'Dokumen PDF';
+  document.getElementById('pdfOvOpenTab').href = url;
+  loading.classList.remove('hidden');
+  iframe.onload = null;
+  iframe.src = 'about:blank';
+  document.getElementById('pdfOv').classList.add('on');
+
+  requestAnimationFrame(() => {
+    if (myToken !== pdfViewerToken) return;
+    iframe.src = getPdfEmbedUrl(url);
+  });
+  iframe.onload = () => { if (myToken === pdfViewerToken) { loading.classList.add('hidden'); iframe.onload = null; } };
+  setTimeout(() => { if (myToken === pdfViewerToken) loading.classList.add('hidden'); }, 6000);
+}
+function closePdfViewer() {
+  pdfViewerToken++;
+  document.getElementById('pdfOv').classList.remove('on');
+  document.getElementById('pdfOvFrame').onload = null;
+  document.getElementById('pdfOvFrame').src = 'about:blank';
+}
+
+/* ── PENAYANG IMEJ (sokong pautan Google Drive) ── */
+let imgViewerToken = 0;
+function openImageViewer(url, title) {
+  const loading = document.getElementById('imgOvLoading');
+  const imgEl = document.getElementById('imgOvImg');
+  const myToken = ++imgViewerToken;
+
+  document.getElementById('imgOvTitle').textContent = title || 'Imej';
+  document.getElementById('imgOvOpenTab').href = url;
+  document.getElementById('imgOvLoadingTxt').textContent = 'Memuatkan imej...';
+  loading.classList.remove('hidden');
+  imgEl.onload = null; imgEl.onerror = null; imgEl.src = '';
+  document.getElementById('imgOv').classList.add('on');
+
+  requestAnimationFrame(() => { if (myToken === imgViewerToken) imgEl.src = url; });
+  imgEl.onload = () => { if (myToken === imgViewerToken) { loading.classList.add('hidden'); imgEl.onload = null; } };
+  imgEl.onerror = () => { if (myToken === imgViewerToken) { document.getElementById('imgOvLoadingTxt').textContent = 'Gagal memuatkan imej.'; } };
+  setTimeout(() => { if (myToken === imgViewerToken) loading.classList.add('hidden'); }, 6000);
+}
+function closeImageViewer() {
+  imgViewerToken++;
+  document.getElementById('imgOv').classList.remove('on');
+  const imgEl = document.getElementById('imgOvImg');
+  imgEl.onload = null; imgEl.onerror = null; imgEl.src = '';
+}
+
+/* ── PENAYANG NOTA ── */
+function openNoteViewer(nota, title) {
+  document.getElementById('noteOvTitle').textContent = title || 'Nota';
+  document.getElementById('noteOvBody').innerHTML = nota || '<p style="color:var(--s400)">Tiada kandungan.</p>';
+  document.getElementById('noteOv').classList.add('on');
+}
+function closeNoteViewer() { document.getElementById('noteOv').classList.remove('on'); }
+
+/* Tutup semua penayang guna kekunci Esc */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closePdfViewer(); closeImageViewer(); closeNoteViewer(); closeNoteEditor(); }
+});
+
+/* ── EDITOR NOTA (Admin) — sokong mod visual (WYSIWYG) & Kod HTML ── */
+let noteEdIndex = null;
+let noteEdCodeMode = false;
+function openNoteEditor(index) {
+  noteEdIndex = index;
+  const nota = dataDokumentasi[index].nota || '';
+  document.getElementById('noteEdBody').innerHTML = nota;
+  document.getElementById('noteEdCodeBody').value = nota;
+  setNoteEdMode(false);
+  document.getElementById('noteEdOv').classList.add('on');
+}
+function closeNoteEditor() { document.getElementById('noteEdOv').classList.remove('on'); noteEdIndex = null; }
+function setNoteEdMode(codeMode) {
+  const wysiwygEl = document.getElementById('noteEdBody');
+  const codeEl = document.getElementById('noteEdCodeBody');
+  const warningEl = document.getElementById('noteEdCodeWarning');
+  const toggleBtn = document.getElementById('noteEdCodeToggle');
+
+  if (codeMode && !noteEdCodeMode) codeEl.value = wysiwygEl.innerHTML;
+  else if (!codeMode && noteEdCodeMode) wysiwygEl.innerHTML = codeEl.value;
+
+  noteEdCodeMode = codeMode;
+  wysiwygEl.classList.toggle('hidden', codeMode);
+  codeEl.classList.toggle('hidden', !codeMode);
+  warningEl.classList.toggle('hidden', !codeMode);
+  toggleBtn.classList.toggle('active', codeMode);
+  document.querySelectorAll('.note-ed-tb button[data-cmd]').forEach(b => { b.disabled = codeMode; });
+  if (codeMode) codeEl.focus(); else wysiwygEl.focus();
+}
+document.getElementById('noteEdCodeToggle').addEventListener('click', () => setNoteEdMode(!noteEdCodeMode));
+function simpanNoteEditor() {
+  if (noteEdIndex === null) return;
+  const html = noteEdCodeMode ? document.getElementById('noteEdCodeBody').value : document.getElementById('noteEdBody').innerHTML;
+  dataDokumentasi[noteEdIndex].nota = html;
+  closeNoteEditor();
+  renderAdminDokumentasi();
+  toast('Nota dikemaskini (klik "Simpan Perubahan" untuk simpan ke Sheet)', 'inf');
+}
+document.querySelectorAll('.note-ed-tb button[data-cmd]').forEach(btn => {
+  btn.addEventListener('click', () => { document.execCommand(btn.dataset.cmd, false, null); document.getElementById('noteEdBody').focus(); });
+});
+
+/* ── PANEL ADMIN: URUS SENARAI DOKUMENTASI ── */
+function renderAdminDokumentasi() {
+  const wrap = document.getElementById('dok-admin-list');
+  document.getElementById('dok-admin-empty').style.display = dataDokumentasi.length ? 'none' : 'block';
+  wrap.innerHTML = dataDokumentasi.map((item, i) => `
+    <div class="doc-admin-row">
+      <div class="dar-num">${i + 1}</div>
+      <div class="dar-fields">
+        <div class="dar-row2">
+          <input class="fi" style="flex:1" placeholder="Judul Dokumen" value="${esc(item.judul)}" oninput="dokUbahMedan(${i},'judul',this.value)">
+          <div class="toggle-switch ${item.aktif ? 'active' : ''}" title="Aktif / Nyahaktif" onclick="dokTogolAktif(${i})"></div>
+        </div>
+        <input class="fi" placeholder="URL / Pautan (cth. pautan Google Drive, PDF, gambar) — biar kosong jika guna Nota" value="${esc(item.url)}" oninput="dokUbahMedan(${i},'url',this.value)">
+        <button type="button" class="btn btn-s btn-sm" style="width:fit-content" onclick="openNoteEditor(${i})">📝 ${item.nota ? 'Edit Nota' : 'Tambah Nota (jika tiada URL)'}</button>
+      </div>
+      <div class="dar-actions">
+        <button onclick="dokPindah(${i},'up')" ${i === 0 ? 'disabled' : ''} title="Naik">↑</button>
+        <button onclick="dokPindah(${i},'down')" ${i === dataDokumentasi.length - 1 ? 'disabled' : ''} title="Turun">↓</button>
+        <button class="dar-del" onclick="dokPadam(${i})" title="Padam">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+function dokUbahMedan(i, medan, nilai) { dataDokumentasi[i][medan] = nilai; }
+function dokTogolAktif(i) { dataDokumentasi[i].aktif = !dataDokumentasi[i].aktif; renderAdminDokumentasi(); }
+function dokPindah(i, arah) {
+  if (arah === 'up' && i > 0) [dataDokumentasi[i - 1], dataDokumentasi[i]] = [dataDokumentasi[i], dataDokumentasi[i - 1]];
+  else if (arah === 'down' && i < dataDokumentasi.length - 1) [dataDokumentasi[i], dataDokumentasi[i + 1]] = [dataDokumentasi[i + 1], dataDokumentasi[i]];
+  renderAdminDokumentasi();
+}
+function dokPadam(i) {
+  openMo('Padam Dokumen', `<p>Adakah anda pasti ingin memadam dokumen <strong>${esc(dataDokumentasi[i].judul || 'ini')}</strong> daripada senarai?</p>`,
+    `<button class="btn btn-s" onclick="closeMo()">Batal</button>
+     <button class="btn btn-d" onclick="dataDokumentasi.splice(${i},1);renderAdminDokumentasi();closeMo()">Ya, Padam</button>`);
+}
+function tambahDokumen() {
+  dataDokumentasi.push({ id: 'd_' + Date.now(), judul: '', url: '', aktif: true, susunan: dataDokumentasi.length, nota: '' });
+  renderAdminDokumentasi();
+}
+async function simpanSenaraiDokumentasi() {
+  load('Menyimpan Dokumentasi...');
+  try {
+    const fd = new FormData();
+    fd.append('action', 'simpanSenaraiDokumentasi');
+    fd.append('senarai', JSON.stringify(dataDokumentasi));
+    fd.append('kataLaluan', PW);
+    const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: fd });
+    const j = await res.json();
+    unload();
+    if (j.status === 'ok') { toast('✓ Senarai Dokumentasi disimpan', 'ok'); muatDokumentasi(); }
+    else toast('⚠️ ' + (j.mesej || 'Ralat'), 'err');
+  } catch (e) { unload(); toast('Ralat: ' + e.message, 'err'); }
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', () => {
+
+  if (sessionStorage.getItem('safe_admin_pw')) {
+    dokAdmin = true;
+    PW = sessionStorage.getItem('safe_admin_pw');
+    kemaskiniUiAdmin();
+  }
+  muatDokumentasi();
+});
+</script>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   MERENTAS DESA MSSD SARIKEI 2026 — Pendaftaran, Keputusan, Urus Setia
+   Logik & format permintaan ke API sistem lama TIDAK diubah.
+   Semua panggilan guna API_MD (Apps Script lama); Dokumentasi guna GOOGLE_SCRIPT_URL (SAFE).
+   ════════════════════════════════════════════════════════════════ */
+const MD_PF=[['pengurus','Pengurus Pasukan'],['hp_pengurus','No. HP'],['ketua','Ketua Jurulatih'],['hp_ketua','No. HP'],['jurulatih','Jurulatih'],['hp_jurulatih','No. HP'],['juruiring','Juruiring'],['hp_juruiring','No. HP']];
+const mdQ=id=>document.getElementById(id);
+let MDS={};                                   // sekolah semasa (Pendaftaran)
+let MD={role:'',pw:'',nama:'',m:{},had:0};    // sesi pencatat
+let MDKAT='L', MDTimer=null;
+const mdNk=s=>String(s||'').replace(/\s+/g,'').toUpperCase();
+mdQ('mdPf').innerHTML=MD_PF.map(([k,l])=>`<div class="fg"><label class="fl">${l}<input class="fi" id="mdp_${k}"></label></div>`).join('');
+
+async function mdCall(o){
+  if(!API_MD||API_MD.includes('LETAK')||API_MD.includes('GANTI')) return {ok:false,msg:'GOOGLE_SCRIPT_URL belum ditetapkan dalam kod HTML.'};
+  try{const r=await fetch(API_MD,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)});return await r.json()}
+  catch(e){return{ok:false,msg:'Tidak dapat berhubung dengan pelayan.'}}
+}
+function mdNote(id,h,c){const e=mdQ(id);e.innerHTML=h;e.className=c?'md-'+c:''}
+
+/* ── Pencangkuk navigasi ── */
+window.mdHook=(id,kat)=>{
+  if(id!=='v-keputusan'&&MDTimer){clearInterval(MDTimer);MDTimer=null}
+  if(id==='v-keputusan') mdKeputusanBuka(kat||MDKAT);
+  if(id==='v-admin') mdAdminBuka();
+  if(id==='v-daftar') mdSenaraiMuat();
+};
+window.mdOnAdminChange=()=>{
+  if(!dokAdmin){ // log keluar admin: bersihkan sesi yang bergantung pada admin
+    if(MDS.admin){MDS={};mdShowForm(false)}
+    if(MD.role==='admin') mdPcKeluar();
+    mdQ('mdJadual').innerHTML='';
+  }
+};
+
+/* ═════════ PENDAFTARAN ═════════ */
+async function mdSenaraiMuat(){
+  const r=await mdCall({a:'senaraiSekolah'}),m=mdQ('mdSenaraiMsg'),tb=mdQ('mdSenaraiTbl');
+  if(!r.ok){m.textContent=r.msg||'Senarai tidak dapat dimuatkan.';tb.classList.add('hidden');return}
+  mdQ('mdSenaraiJum').textContent=r.list.length+' / '+r.jumlah+' sekolah telah mendaftar';
+  if(!r.list.length){m.textContent='Belum ada sekolah yang mendaftar.';tb.classList.add('hidden');return}
+  m.textContent='';tb.classList.remove('hidden');
+  mdQ('mdSenarai').innerHTML=r.list.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.nama)}</td><td>${x.L}</td><td>${x.P}</td><td>${x.L+x.P}</td><td>${x.disahkan?'<span class="md-b o">Disahkan</span>':'<span class="md-b">Telah mendaftar</span>'}</td></tr>`).join('');
+}
+function mdShowForm(on){mdQ('mdSenaraiCard').classList.toggle('hidden',on);if(!on)mdSenaraiMuat();mdQ('mdLogin').classList.toggle('hidden',on);mdQ('mdFormWrap').classList.toggle('hidden',!on)}
+async function mdMasuk(){const k=mdQ('mdKod').value.trim().toUpperCase();if(!k)return mdNote('mdMLogin','Sila isi kod sekolah.','err');mdNote('mdMLogin','Memeriksa…');await mdBuka(k,'','mdMLogin')}
+async function mdBuka(kod,pw,m){const r=await mdCall({a:'login',kod,pw});if(!r.ok)return mdNote(m||'mdMLogin',esc(r.msg),'err');MDS=r;mdPaparBorang();mdShowForm(true)}
+async function mdBukaSekolah(kod){load('Membuka sekolah...');const r=await mdCall({a:'login',kod,pw:PW});unload();if(!r.ok)return toast(r.msg||'Gagal','err');MDS=r;mdPaparBorang();mdShowForm(true);nav('v-daftar')}
+function mdBalik(){if(MDS.admin){nav('v-admin')}else{mdShowForm(false)}}
+function mdPaparBorang(){const s=MDS.sekolah,t=MDS.pasukan||{},ro=MDS.tutup&&!MDS.admin;
+mdQ('mdTajuk').textContent=s.nama+' ('+s.kod+')';
+mdQ('mdStatus').innerHTML=(MDS.admin?'<span class="md-b">Mod admin</span> ':'')+(MDS.tutup?`<span class="md-b x">${ro?'Pendaftaran ditutup – baca sahaja':'Ditutup (admin boleh sunting)'}</span>`:'<span class="md-b o">Pendaftaran dibuka</span>');
+MD_PF.forEach(([k])=>mdQ('mdp_'+k).value=t[k]||'');let h='';
+[['L','LELAKI 11 TKB',33],['P','PEREMPUAN 11 TKB',41]].forEach(([k,l,n])=>{h+=`<div class="md-h4">${l}</div>`;for(let i=1;i<=5;i++)h+=`<div class="md-r" data-k="${k}" data-i="${i}"><b>${(k=='L'?0:5)+i}</b><input class="fi" placeholder="Nama peserta"><input class="fi" placeholder="No. KP / Sijil Lahir"><input class="fi" placeholder="Catatan"><span class="md-no">${esc(s.singkatan)} ${n+i-1}</span></div>`});
+mdQ('mdBaris').innerHTML=h;
+MDS.peserta.forEach(p=>{const r=document.querySelector(`.md-r[data-k="${p.kategori}"][data-i="${p.slot}"]`);if(r){r.children[1].value=p.nama;r.children[2].value=p.dokumen;r.children[3].value=p.catatan||''}});
+document.querySelectorAll('#mdFormWrap input').forEach(e=>e.disabled=ro);mdQ('mdSimpan').disabled=ro;mdKira();mdQ('mdMForm').innerHTML=''}
+function mdKira(){const c={L:0,P:0};document.querySelectorAll('.md-r[data-k]').forEach(r=>{if(r.children[1].value.trim())c[r.dataset.k]++});
+const w=k=>c[k]>0&&c[k]<4?' <span class="md-warn">(kurang 4: tidak dikira berpasukan)</span>':'';
+mdQ('mdKira').innerHTML=`Lelaki: <b>${c.L}</b>${w('L')} · Perempuan: <b>${c.P}</b>${w('P')} · Jumlah: <b>${c.L+c.P}</b>`}
+mdQ('mdBaris').addEventListener('input',mdKira);
+const mdRowsData=()=>[...document.querySelectorAll('.md-r[data-k]')].map(r=>({kategori:r.dataset.k,slot:+r.dataset.i,nama:r.children[1].value,dokumen:r.children[2].value,catatan:r.children[3].value}));
+const mdTeam=()=>{const o={};MD_PF.forEach(([k])=>o[k]=mdQ('mdp_'+k).value);return o};
+async function mdSimpan(){const b=mdQ('mdSimpan');b.disabled=true;mdNote('mdMForm','Menyimpan…');
+const r=await mdCall({a:'save',kod:MDS.sekolah.kod,pw:MDS.admin?PW:'',pasukan:mdTeam(),peserta:mdRowsData()});b.disabled=false;
+if(!r.ok)return mdNote('mdMForm',r.errors?'<b>Sila betulkan:</b><ul>'+r.errors.map(e=>`<li>${esc(e)}</li>`).join('')+'</ul>':esc(r.msg),'err');
+mdNote('mdMForm',`<b>Berjaya disimpan (${r.jumlah} peserta).</b>`+(r.warnings.length?'<ul class="md-warn">'+r.warnings.map(e=>`<li>${esc(e)}</li>`).join('')+'</ul>':''),'ok')}
+function mdCetak(){const s=MDS.sekolah,t=mdTeam(),R=mdRowsData(),n=k=>R.filter(x=>x.kategori==k&&x.nama.trim()).length;const E=esc;
+const tr=x=>`<tr><td>${(x.kategori=='L'?0:5)+x.slot}</td><td>${E(x.nama.toUpperCase())}</td><td>${E(x.dokumen)}</td><td>${E(s.singkatan)} ${(x.kategori=='L'?33:41)+x.slot-1}</td><td>${E(x.catatan)}</td></tr>`;
+const sec=(k,l)=>`<tr><th colspan="5">${l}</th></tr>`+R.filter(x=>x.kategori==k).map(tr).join('');
+const j=(l,a,b)=>`<tr><td>${l}</td><td>${E(a)}</td><td>No. HP:</td><td>${E(b)}</td></tr>`;
+const c=`<div style="text-align:center"><b>BORANG PENYERTAAN SEKOLAH RENDAH<br>KEJOHANAN MERENTAS DESA PEMBANGUNAN<br>MAJLIS SUKAN SEKOLAH DAERAH SARIKEI<br>2026</b></div><table><tr><td>NAMA SEKOLAH</td><td colspan="3">${E(s.nama)} (${E(s.kod)})</td></tr>${j('PENGURUS PASUKAN',t.pengurus,t.hp_pengurus)}${j('KETUA JURULATIH',t.ketua,t.hp_ketua)}${j('JURULATIH',t.jurulatih,t.hp_jurulatih)}${j('JURUIRING',t.juruiring,t.hp_juruiring)}<tr><td>BILANGAN ATLET</td><td>Lelaki: ${n('L')}</td><td>Perempuan: ${n('P')}</td><td>Jumlah: ${n('L')+n('P')}</td></tr></table><table><tr><th>BIL.</th><th>NAMA PESERTA</th><th>NO. KAD PENGENALAN / SIJIL LAHIR</th><th>NO. PESERTA</th><th>CATATAN</th></tr>${sec('L','LELAKI 11TKB')}${sec('P','PEREMPUAN 11TKB')}</table><p>Disahkan oleh:<br><br>………………………………… <span style="float:right">Cop sekolah:</span></p>`;mdTabCetak(c,'Borang Penyertaan – '+s.nama)}
+function mdTabCetak(c,t){const w=window.open('','_blank');if(!w){alert('Pelayar menyekat tab baharu. Benarkan pop-up untuk laman ini, kemudian cuba lagi.');return}
+w.document.write('<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><title>'+t+'</title><style>@page{margin:12mm}body{font:12px Arial,sans-serif;margin:12px}table{width:100%;border-collapse:collapse;margin:8px 0}td,th{border:1px solid #000;padding:5px;text-align:left}h2,h3{margin:10px 0 4px}.np{margin-bottom:10px;padding:8px 14px;font-size:14px}@media print{.np{display:none}}</style></head><body><button class="np" onclick="window.print()">Cetak</button>'+c+'</body></html>');w.document.close()}
+
+/* ═════════ KEPUTUSAN: PAPARAN TV ═════════ */
+const MD_PN={'SK METHODIST ANGLOCHINESE':'SK METHODIST AC'},mdPn=s=>MD_PN[s]||s; // nama pendek untuk paparan TV sahaja
+function mdKeputusanBuka(kat){
+  MDKAT=kat;
+  mdQ('tvT').textContent='KEDUDUKAN PASUKAN – '+(kat=='L'?'LELAKI':'PEREMPUAN')+' 11 TKB';
+  mdQ('tvB').innerHTML='';mdQ('tvI').innerHTML='';mdQ('tvF').textContent='';mdQ('tvS').textContent='Memuatkan…';
+  if(MD.role) mdPcRender();
+  mdTvMuat();if(MDTimer)clearInterval(MDTimer);MDTimer=setInterval(mdTvMuat,6000);
+}
+async function mdTvMuat(){const kat=MDKAT,r=await mdCall({a:'papan',kat});if(kat!==MDKAT)return;
+  if(!r.ok){mdQ('tvS').textContent=r.msg||'Tidak dapat memuatkan keputusan.';return}
+  mdQ('tvT').textContent='KEDUDUKAN PASUKAN – '+(kat=='L'?'LELAKI':'PEREMPUAN')+' 11 TKB';
+  mdQ('tvS').textContent='Kedudukan direkod: '+r.rekod+'/'+r.had+' · 4 kedudukan terbaik dikira · Dikemas kini '+new Date().toLocaleTimeString('ms-MY');
+  const box=mdQ('tvBox'),rw=Math.ceil(r.layak.length/2)||1;
+  box.style.fontSize=(document.fullscreenElement===box||document.body.classList.contains('tv-only'))?Math.max(1.2,Math.min(2.4,76/(rw*1.3)))+'vh':'';
+  let ps=false;
+  mdQ('tvB').innerHTML=r.layak.map(t=>{const pt=r.layak.some(x=>x!==t&&x.ag===t.ag&&x.k!==t.k);ps=ps||pt;
+    const s=t.v.slice().sort((a,b)=>a-b).map((x,i)=>`<i style="${i>3?'opacity:.4':'color:#fff'}">${x>=r.pen?'–':x}</i>`).join(' ');
+    return `<div><b>${t.k}${t.seri?'=':''}</b><span>${esc(mdPn(t.nama))}</span><b>${t.ag}${pt?'*':''}</b><span>${s}</span></div>`}).join('');
+  mdQ('tvH').textContent='10 TERBAIK (INDIVIDU)'+(r.sahInd?' ✔ Disahkan':' – sementara');
+  mdQ('tvI').innerHTML=r.ind.map(i=>`<div>${i.k}. ${esc(i.nama)}<br><small>${esc(mdPn(i.sek))}</small></div>`).join('');
+  mdQ('tvF').textContent=(ps?'* Agregat sama, diputuskan oleh penentu seri. ':'')+(r.tidak.length?'Tidak dikira berpasukan (kurang 4 peserta): '+r.tidak.map(mdPn).join(', '):'');
+}
+function mdTvTab(){
+  let base=(typeof URL_LAMAN==='string'&&/^https:\/\//.test(URL_LAMAN))?URL_LAMAN:'';
+  if(!base){
+    if(/googleusercontent\.com$|^$/.test(location.hostname)||location.protocol==='about:'){toast('Tetapkan URL_LAMAN (alamat GitHub Pages) dalam kod HTML supaya tab baharu boleh dibuka.','err');return}
+    base=location.href;
+  }
+  window.open(base.split('#')[0]+'#tv='+MDKAT,'_blank','noopener');
+}
+function mdTvFull(){const b=mdQ('tvBox');if(document.fullscreenElement)document.exitFullscreen();else if(b.requestFullscreen)b.requestFullscreen()}
+document.addEventListener('fullscreenchange',()=>{if(MDTimer)mdTvMuat()});
+
+// Buka terus dalam mod papan sahaja jika URL mengandungi #tv=L atau #tv=P
+(function(){const m=location.hash.match(/tv=([LP])/);if(m){document.body.classList.add('tv-only');nav('v-keputusan',m[1])}})();
+
+/* ═════════ KEPUTUSAN: PENCATAT (ikon kecil di penjuru papan) ═════════ */
+function mdPcLogin(){
+  if(MD.role){mdQ('mdCatat').scrollIntoView({behavior:'smooth'});return}
+  if(dokAdmin&&PW){mdPcMasuk(PW,'Admin');return}   // admin sudah log masuk: terus masuk
+  openMo('Log masuk pencatat',`<div class="fg"><label class="fl" for="mdPcNm">Nama pencatat</label><input id="mdPcNm" class="fi"></div><div class="fg" style="margin-top:10px"><label class="fl" for="mdPcPw">Kata laluan</label><input id="mdPcPw" type="password" class="fi" onkeydown="if(event.key==='Enter')mdPcMasuk()"></div><div id="mdPcErr" class="md-err" style="margin-top:8px;font-size:13px"></div>`,
+    `<button class="btn btn-s" onclick="closeMo()">Batal</button><button class="btn btn-p" onclick="mdPcMasuk()">Masuk</button>`);
+  setTimeout(()=>mdQ('mdPcNm')?.focus(),60);
+}
+async function mdPcMasuk(pwA,namaA){
+  const pw=(typeof pwA==='string')?pwA:mdQ('mdPcPw').value,nama=(typeof namaA==='string')?namaA:(mdQ('mdPcNm').value.trim()||'pencatat');
+  load('Memeriksa...');const r=await mdCall({a:'mula',pw});unload();
+  if(!r.ok){if(mdQ('mdPcErr')&&typeof pwA!=='string')mdQ('mdPcErr').textContent=r.msg;else toast(r.msg||'Gagal','err');return}
+  MD={role:r.role,pw,nama,had:r.had,m:{}};r.peserta.forEach(p=>MD.m[mdNk(p.no)]=p);
+  closeMo();mdPcRender();toast('Log masuk pencatat berjaya','ok');
+}
+function mdPcRender(){
+  mdQ('mdCatat').classList.remove('hidden');
+  mdQ('mdCatKat').textContent=(MDKAT=='L'?'Lelaki':'Perempuan')+' 11 TKB';
+  mdQ('mdRl').textContent='Log masuk sebagai: '+(MD.role=='admin'?'Admin – butang Tidak sah/Sah/Batal tersedia selepas Muat entri':'Pencatat – tanpa akses Tidak sah');
+  mdQ('mdMula').value=1;mdQ('mdEnt').innerHTML='';mdBaris();
+}
+function mdPcKeluar(){MD={role:'',pw:'',nama:'',m:{},had:0};mdQ('mdCatat').classList.add('hidden')}
+function mdBaris(){const s=+mdQ('mdMula').value||1;let h='';for(let i=0;i<10;i++)h+=`<div class="md-cr" data-p="${s+i}"><b>${s+i}</b><input class="fi" placeholder="No. Peserta" oninput="mdEko(this)"><span></span></div>`;mdQ('mdRows').innerHTML=h;mdQ('mdMC').textContent='';mdJurang()}
+function mdEko(el){const p=MD.m[mdNk(el.value)],sp=el.nextElementSibling;
+if(!el.value.trim())sp.textContent='';else if(!p){sp.className='md-err';sp.textContent='Tidak dijumpai'}else if(p.kat!=MDKAT){sp.className='md-err';sp.textContent='Kategori '+(p.kat=='L'?'lelaki':'perempuan')+': '+p.nama}else{sp.className='md-ok';sp.textContent=p.nama+' · '+p.sek}}
+async function mdHantar(){const items=[...document.querySelectorAll('#mdRows .md-cr')].map(r=>({pos:r.dataset.p,no:r.children[1].value})).filter(x=>x.no.trim());if(!items.length)return;
+mdQ('mdHb').disabled=true;mdQ('mdMC').textContent='Menyimpan…';const r=await mdCall({a:'catat',pw:MD.pw,nama:MD.nama,kat:MDKAT,items});mdQ('mdHb').disabled=false;
+if(!r.ok){mdQ('mdMC').className='md-err';return mdQ('mdMC').textContent=r.msg}
+const bad={};r.ralat.forEach(e=>bad[e.pos]=e.msg);
+document.querySelectorAll('#mdRows .md-cr').forEach(row=>{const p=row.dataset.p;if(bad[p]){row.children[2].className='md-err';row.children[2].textContent=bad[p]}else if(r.disimpan.includes(+p)){row.children[1].value='';row.children[1].disabled=true;row.children[2].className='md-ok';row.children[2].textContent+=' ✔'}});
+mdJurang();mdQ('mdMC').className=r.ralat.length?'md-warn':'md-ok';mdQ('mdMC').textContent=r.disimpan.length+' disimpan'+(r.ralat.length?', '+r.ralat.length+' perlu dibetulkan (kecuali kedudukan itu, baris lain sudah disimpan).':(items.length==10?'. Taip kelompok seterusnya.':'. Baris kosong boleh diisi kemudian dan dihantar semula.'));
+if(!r.ralat.length&&items.length==10){mdQ('mdMula').value=(+mdQ('mdMula').value)+10;setTimeout(mdBaris,600)}}
+const mdRg=a=>{const o=[];for(let i=0;i<a.length;i++){let j=i;while(a[j+1]===a[j]+1)j++;o.push(j>i?a[i]+'–'+a[j]:a[i]);i=j}return o.join(', ')};
+async function mdJurang(){const r=await mdCall({a:'papan',kat:MDKAT});if(!r.ok)return;const s=new Set(r.hilang);let mx=0;for(let i=1;i<=r.had;i++)if(!s.has(i))mx=i;const g=r.hilang.filter(p=>p<mx);
+mdQ('mdJur').className=g.length?'md-warn':'md-ok';mdQ('mdJur').textContent=g.length?'Jurang (belum dimasukkan, di bawah kedudukan '+mx+'): '+mdRg(g):(mx?'Tiada jurang hingga kedudukan '+mx+'.':'Belum ada kedudukan direkod.')}
+async function mdEntri(){const r=await mdCall({a:'entri',pw:MD.pw,kat:MDKAT});if(!r.ok)return mdQ('mdEnt').textContent=r.msg;const ad=MD.role=='admin',E=esc;
+mdQ('mdEnt').innerHTML='<table><thead><tr><th>Kad</th><th>No. Peserta</th><th>Nama</th><th>Pencatat</th><th>Status</th><th>Semak</th><th></th></tr></thead><tbody>'+r.list.map(x=>`<tr><td>${x.pos}</td><td>${E(x.no)}</td><td>${E((MD.m[mdNk(x.no)]||{}).nama)}</td><td>${E(x.pc)}</td><td>${E(x.status)} ${E(x.sebab)}</td><td>${x.sm?'✔ '+E(x.sm)+' <button class="btn btn-s btn-sm" onclick="mdSemak('+x.pos+',1)">Batal</button>':(x.pos<=10?'<button class="btn btn-s btn-sm" onclick="mdSemak('+x.pos+')">Semak</button>':'')}</td><td>${ad?`<button class="btn btn-s btn-sm" onclick="mdTanda(${x.pos},'TIDAK SAH')">Tidak sah</button> <button class="btn btn-s btn-sm" onclick="mdTanda(${x.pos},'SAH')">Sah</button> <button class="btn btn-s btn-sm" onclick="mdTanda(${x.pos},'BATAL')">Batal</button>`:''}</td></tr>`).join('')+'</tbody></table>'}
+async function mdSemak(pos,undo){const r=await mdCall({a:'semak',pw:MD.pw,kat:MDKAT,pos,nama:MD.nama,undo:!!undo});if(!r.ok)alert(r.msg);else mdEntri()}
+async function mdTanda(pos,status){const sebab=status=='SAH'?'':prompt('Sebab:')||'';const r=await mdCall({a:'tanda',pw:MD.pw,kat:MDKAT,pos,status,sebab});if(!r.ok)alert(r.msg);else mdEntri()}
+
+/* ═════════ ADMIN: URUS SETIA ═════════ */
+async function mdAdminBuka(){if(!dokAdmin)return;await mdAdminLoad();mdMuatPautan()}
+async function mdAdminLoad(){const r=await mdCall({a:'adminList',pw:PW});if(!r.ok)return mdNote('mdMAdmin',esc(r.msg)+' (Pastikan ADMIN_PW dalam Script Properties sistem lama sama dengan kata laluan Admin.)','err');mdNote('mdMAdmin','');mdPaparAdmin(r.list)}
+function mdPaparAdmin(l){const sum=k=>l.reduce((a,x)=>a+x[k],0),E=esc;
+mdQ('mdRingkas').innerHTML=`Sekolah mendaftar: <b>${l.filter(x=>x.L+x.P>0).length}/${l.length}</b> · Lelaki: <b>${sum('L')}</b> · Perempuan: <b>${sum('P')}</b>`;
+mdQ('mdJadual').innerHTML=l.map((x,i)=>`<tr><td>${i+1}</td><td>${E(x.kod)}</td><td>${E(x.nama)}${x.dup?' <span class="md-b x">singkatan sama</span>':''}</td><td><input class="fi" value="${E(x.singkatan)}" style="width:140px" onchange="mdUbahSing('${E(x.kod)}',this)"></td><td>${x.L}</td><td>${x.P}</td><td>${x.L+x.P?'✔':'—'}</td><td><input type="checkbox" ${x.disahkan?'checked':''} onchange="mdFlag('${E(x.kod)}','disahkan',this.checked)"></td><td><input type="checkbox" ${x.kunci?'checked':''} onchange="mdFlag('${E(x.kod)}','kunci',this.checked)"></td><td><button class="btn btn-s btn-sm" onclick="mdBukaSekolah('${E(x.kod)}')">Buka</button></td></tr>`).join('')}
+async function mdUbahSing(kod,el){const val=el.value.trim().toUpperCase();if(!val||!confirm('Tukar singkatan kepada "'+val+'"? Nombor peserta sekolah ini dikemas kini (semak jika baju sudah dicetak).')){mdAdminLoad();return}
+const r=await mdCall({a:'adminSingkatan',pw:PW,kod,singkatan:val});if(!r.ok)alert(r.msg||'Gagal');mdAdminLoad()}
+async function mdSemua(field,value,t){if(!confirm(t))return;const r=await mdCall({a:'adminFlagSemua',pw:PW,field,value});alert(r.ok?r.n+' sekolah dikemas kini.':(r.msg||'Gagal'));mdAdminLoad()}
+async function mdFlag(kod,field,value){const r=await mdCall({a:'adminFlag',pw:PW,kod,field,value});if(!r.ok)alert(r.msg||'Gagal menyimpan')}
+
+/* Laporan */
+function mdCetakLap(){const c=mdQ('mdLapW').cloneNode(true);c.querySelectorAll('button').forEach(b=>b.remove());mdTabCetak(c.innerHTML,'Laporan Merentas Desa MSSD Sarikei 2026')}
+async function mdLapor(dalam){const r=await mdCall({a:'laporan',pw:PW}),w=mdQ('mdLapW'),E=esc;w.classList.remove('hidden');if(!r.ok)return w.textContent=r.msg;const T=k=>k=='L'?'LELAKI':'PEREMPUAN';
+let h='<h2>Merentas Desa MSSD Sarikei 2026 – '+(dalam?'Rujukan wakil daerah 2027 (DALAMAN)':'Laporan hadiah')+'</h2><button class="btn btn-s btn-sm" onclick="mdCetakLap()">Pratonton cetakan (tab baharu)</button>';
+['L','P'].forEach(k=>{const d=r.kat[k];
+if(dalam)h+=`<h3>${T(k)} 11 TKB – 5 teratas</h3><table><tr><th>#</th><th>Nama</th><th>No. KP / Sijil</th><th>Sekolah</th></tr>`+d.ind.slice(0,5).map(i=>`<tr><td>${i.k}</td><td>${E(i.nama)}</td><td>${E(i.dok)}</td><td>${E(i.sek)}</td></tr>`).join('')+'</table>';
+else{h+=`<h3>${T(k)} 11 TKB – Individu 1–10</h3><table><tr><th>#</th><th>Nama</th><th>Sekolah</th><th>No. Peserta</th><th>Disemak</th></tr>`+d.ind.map(i=>`<tr><td>${i.k}</td><td>${E(i.nama)}</td><td>${E(i.sek)}</td><td>${E(i.no)}</td><td>${i.semak?'✔':'Belum'}</td></tr>`).join('')+'</table>';
+h+=`<h3>${T(k)} – Pasukan 1–3</h3><table><tr><th>#</th><th>Sekolah</th><th>Agregat</th><th>Pelari (kedudukan akhir)</th></tr>`+d.pas.map(t=>`<tr><td>${t.k}${t.seri?'=':''}</td><td>${E(t.sek)}</td><td>${t.ag}</td><td>${t.ahli.map(a=>E(a.nama)+' ('+(a.r||'–')+')').join('; ')}</td></tr>`).join('')+'</table>'}});w.innerHTML=h}
+
+/* Pautan & Banner (untuk pautan.html di Google Sites) */
+let MD_PT=[];
+function mdPrevBanner(){const u=mdQ('mdPb').value.trim(),i=mdQ('mdPv'),m=mdQ('mdPvm');m.textContent='';i.style.display='none';if(!u)return;i.onload=()=>i.style.display='block';
+i.onerror=()=>{m.textContent='Imej tidak dapat dimuatkan. Pastikan pautan terus ke fail imej (berakhir .jpg/.png/.webp), bukan halaman web.'};i.src=u}
+async function mdMuatPautan(){const r=await mdCall({a:'pautanAdmin',pw:PW});if(!r.ok)return;const p=r.profil;mdQ('mdPt').value=p.tajuk;mdQ('mdPd').value=p.desk;mdQ('mdPb').value=p.banner;mdPrevBanner();mdQ('mdPa').checked=p.bannerAktif;mdQ('mdPu').value=p.umum;MD_PT=r.pautan;mdRPaut()}
+function mdRPaut(){mdQ('mdPl').innerHTML=MD_PT.map((x,i)=>`<tr><td><input class="fi" type="number" value="${x.susunan}" style="width:70px" onchange="MD_PT[${i}].susunan=+this.value"></td><td><input type="checkbox" ${x.aktif?'checked':''} onchange="MD_PT[${i}].aktif=this.checked"></td><td><input class="fi" value="${esc(x.kategori)}" onchange="MD_PT[${i}].kategori=this.value"></td><td><input class="fi" value="${esc(x.tajuk)}" onchange="MD_PT[${i}].tajuk=this.value"></td><td><input class="fi" value="${esc(x.url)}" onchange="MD_PT[${i}].url=this.value"></td><td><button class="btn btn-d btn-sm" onclick="MD_PT.splice(${i},1);mdRPaut()">Padam</button></td></tr>`).join('')}
+function mdTPaut(){MD_PT.push({susunan:MD_PT.length+1,aktif:true,kategori:'',tajuk:'',url:''});mdRPaut()}
+async function mdSPaut(){mdNote('mdMPaut','Menyimpan…');const r=await mdCall({a:'pautanSimpan',pw:PW,profil:{tajuk:mdQ('mdPt').value,desk:mdQ('mdPd').value,banner:mdQ('mdPb').value,bannerAktif:mdQ('mdPa').checked,umum:mdQ('mdPu').value},pautan:MD_PT});
+if(!r.ok)return mdNote('mdMPaut',r.errors?r.errors.map(esc).join('<br>'):esc(r.msg),'err');mdNote('mdMPaut','Disimpan.','ok');mdMuatPautan()}
+</script>
+
+
+</body>
+</html>
