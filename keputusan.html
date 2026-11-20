@@ -65,8 +65,7 @@ if(bad.length){ // pelayan masih menghantar pasukan tidak layak: Apps Script bel
 const cm=(a,b)=>{for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];return 0};
 ok.sort((a,b)=>a.ag-b.ag||cm(a.tb,b.tb));
 ok.forEach((t,i)=>{const p=ok[i-1],sm=x=>x!==t&&x.ag===t.ag&&cm(x.tb,t.tb)==0;t.k=i&&sm(p)?p.k:i+1;t.seri=ok.some(sm)});
-layak=ok;tidak=r.tidak.concat(bad.map(t=>t.nama));
-$('tvS').textContent+=' · \u26A0 Apps Script belum dikemas kini (Deploy > New version)'}}
+layak=ok;tidak=r.tidak.concat(bad.map(t=>t.nama));}}
 const rw=Math.ceil(layak.length/2)||1;document.body.style.fontSize=Math.max(1.2,Math.min(2.4,76/(rw*1.3)))+'vh';let ps=false;
 $('tvB').innerHTML=layak.map(t=>{const pt=layak.some(x=>x!==t&&x.ag===t.ag&&x.k!==t.k);ps=ps||pt;
 const s=t.v.slice().sort((a,b)=>a-b).map((x,i)=>`<i style="${i>3?'opacity:.4':'color:#fff'}">${x>=r.pen?'–':x}</i>`).join(' ');
